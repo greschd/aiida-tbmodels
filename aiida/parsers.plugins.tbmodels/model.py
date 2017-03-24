@@ -5,7 +5,7 @@
 import json
 
 from aiida.parsers.parser import Parser
-from aiida.orm.data.singlefiledata import SinglefileData
+from aiida.orm.data.singlefile import SinglefileData
 
 class ModelParser(Parser):
     """
