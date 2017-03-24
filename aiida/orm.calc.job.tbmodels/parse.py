@@ -44,7 +44,7 @@ class ParseCalculation(JobCalculation):
             raise ValidationError('Cannot add other nodes')
 
         # get the prefix from the *_hr.dat file
-        for filename in folder.get_folder_list():
+        for filename in wannier_folder.get_folder_list():
             if filename.endswith('_hr.dat'):
                 prefix = filename.rsplit('_hr.dat', 1)[0]
                 break
