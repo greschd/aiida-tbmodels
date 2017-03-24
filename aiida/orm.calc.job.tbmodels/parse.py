@@ -13,7 +13,7 @@ from aiida.common.datastructures import CalcInfo, CodeInfo
 
 class ParseCalculation(JobCalculation):
     def _init_internal_params(self):
-        super(SumCalculation, self)._init_internal_params()
+        super(ParseCalculation, self)._init_internal_params()
 
         self._OUTPUT_FILE_NAME = 'model_out.hdf5'
         self._default_parser = 'tbmodels'
@@ -65,7 +65,7 @@ class ParseCalculation(JobCalculation):
         calcinfo.retrieve_list = [self._OUTPUT_FILE_NAME]
 
         codeinfo = CodeInfo()
-        codeinfo.cmdline_params = ['-p', prefix, '-o', self._OUTPUT_FILE_NAME]
+        codeinfo.cmdline_params = ['parse', '-p', prefix, '-o', self._OUTPUT_FILE_NAME]
         codeinfo.code_uuid = code.uuid
         calcinfo.codes_info = [codeinfo]
 
