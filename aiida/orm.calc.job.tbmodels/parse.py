@@ -20,7 +20,7 @@ class ParseCalculation(JobCalculation):
 
     @classproperty
     def _use_methods(cls):
-        retdict = super(SumCalculation, cls)._use_methods
+        retdict = super(ParseCalculation, cls)._use_methods
         retdict.update(dict(
             wannier_folder=dict(
                 valid_types=FolderData,
