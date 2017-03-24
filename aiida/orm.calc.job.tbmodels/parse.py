@@ -16,7 +16,7 @@ class ParseCalculation(JobCalculation):
         super(ParseCalculation, self)._init_internal_params()
 
         self._OUTPUT_FILE_NAME = 'model_out.hdf5'
-        self._default_parser = 'tbmodels'
+        self._default_parser = 'tbmodels.model'
 
     @classproperty
     def _use_methods(cls):

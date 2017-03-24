@@ -7,7 +7,7 @@ import json
 from aiida.parsers.parser import Parser
 from aiida.orm.data.singlefiledata import SinglefileData
 
-class TbmodelsParser(Parser):
+class ModelParser(Parser):
     """
     Parse TBmodels output to a SinglefileData containing the model file.
     """
