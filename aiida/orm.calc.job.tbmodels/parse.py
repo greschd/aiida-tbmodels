@@ -11,7 +11,7 @@ from aiida.common.utils import classproperty
 from aiida.common.exceptions import InputValidationError, ValidationError
 from aiida.common.datastructures import CalcInfo, CodeInfo
 
-class TbmodelsCalculation(JobCalculation):
+class ParseCalculation(JobCalculation):
     def _init_internal_params(self):
         super(SumCalculation, self)._init_internal_params()
 
