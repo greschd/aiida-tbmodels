@@ -2,6 +2,7 @@
 #
 # Author:  Dominik Gresch <greschd@gmx.ch>
 
+import os
 import json
 
 from aiida.orm import JobCalculation
@@ -13,10 +14,10 @@ from aiida.common.datastructures import CalcInfo, CodeInfo
 class TbmodelsCalculation(JobCalculation):
     def _init_internal_params(self):
         super(SumCalculation, self)._init_internal_params()
-        
-        self._OUTPUT_FILE_NAME = 'model.hdf5'
+
+        self._OUTPUT_FILE_NAME = 'model_out.hdf5'
         self._default_parser = 'tbmodels'
-        
+
     @classproperty
     def _use_methods(cls):
         retdict = super(SumCalculation, cls)._use_methods
@@ -25,11 +26,11 @@ class TbmodelsCalculation(JobCalculation):
                 valid_types=FolderData,
                 additional_parameter=None,
                 linkname='wannier_folder',
-                docstring="Folder containing the Wannier90 output data, with prefix 'wannier90'."    
+                docstring="Folder containing the Wannier90 output data, with prefix 'wannier90'."
             )
         ))
         return retdict
-        
+
     def _prepare_for_submission(self, tempfolder, inputdict):
         try:
             wannier_folder = inputdict.pop(self.get_linkname('wannier_folder'))
@@ -39,25 +40,33 @@ class TbmodelsCalculation(JobCalculation):
             code = inputdict.pop(self.get_linkname('code'))
         except KeyError:
             raise InputValidationError('No code specified for this calculation.')
-            
         if inputdict:
             raise ValidationError('Cannot add other nodes')
-            
-        # input_json = parameters.get_dict()
-        
-        input_filename = tempfolder.get_abs_path(self._INPUT_FILE_NAME)
-        # with open(input_filename, 'w') as infile:
-        #     json.dump(input_json, infile)
-            
+
+        # get the prefix from the *_hr.dat file
+        for filename in folder.get_folder_list():
+            if filename.endswith('_hr.dat'):
+                prefix = filename.rsplit('_hr.dat', 1)[0]
+                break
+        else:
+            raise InputValidationError("'wannier_folder' does not contain a *_hr.dat file.")
+
+        # add Wannier90 output files to local_copy_list
+        wannier_folder_abspath = wannier_folder.get_abs_path()
+        local_copy_list = [
+            (os.path.join(wannier_folder_abspath, 'path', filename), filename)
+            for filename in wannier_folder.get_folder_list()
+        ]
+
         calcinfo = CalcInfo()
         calcinfo.uuid = self.uuid
-        calcinfo.local_copy_list = []
+        calcinfo.local_copy_list = local_copy_list
         calcinfo.remote_copy_list = []
         calcinfo.retrieve_list = [self._OUTPUT_FILE_NAME]
-        
+
         codeinfo = CodeInfo()
-        codeinfo.cmdline_params = [self._INPUT_FILE_NAME, self._OUTPUT_FILE_NAME]
+        codeinfo.cmdline_params = ['-p', prefix, '-o', self._OUTPUT_FILE_NAME]
         codeinfo.code_uuid = code.uuid
         calcinfo.codes_info = [codeinfo]
-        
+
         return calcinfo
