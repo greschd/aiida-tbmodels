@@ -53,8 +53,7 @@ class SymmetrizeCalculation(JobCalculation):
         if inputdict:
             raise ValidationError('Cannot add other nodes')
 
-        # add Wannier90 output files to local_copy_list
-        wannier_folder_abspath = wannier_folder.get_abs_path()
+        # add input model and symmetries to the files to be copied
         local_copy_list = [
             (model_file.get_file_abs_path(), 'model.hdf5'),
             (symmetries_file.get_file_abs_path(), 'symmetries.hdf5'),
