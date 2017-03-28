@@ -8,8 +8,9 @@ from aiida.orm import QueryBuilder
 def get_input_folder():
     folder_description = u'InAs Wannier90 input from HF VASP'
     qb = QueryBuilder()
+    FolderData = DataFactory('folder')
     qb.append(
-        DataFactory('folder'),
+        FolderData,
         filters={'description': {'==': folder_description}}
     )
     res = qb.all()
