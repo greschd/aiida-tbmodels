@@ -34,6 +34,7 @@ def get_input_folder():
 
 def get_singlefile_instance(description, path):
     qb = QueryBuilder()
+    SinglefileData = DataFactory('singlefile')
     qb.append(
         SinglefileData,
         filters={'description': {'==': description}}
@@ -81,8 +82,8 @@ def run_symmetricextraction():
     wannier_settings.store()
     params['wannier_settings'] = wannier_settings
     params['symmetries'] = get_singlefile_instance(u'Symmetries for InAs', 'reference_input/symmetries.hdf5')
-    wfobj = WorkflowFactory('symmetrictbextraction')(params=params)
-    wfobj.store_all()
+    WorkflowFactory('tbmodels.symmetrictbextraction')(params=params)
+    wfobj.store()
     wfobj.start()
 
 
