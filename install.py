@@ -53,8 +53,9 @@ def lndir(src, dst):
 install_paths = [
     ('orm.calc.job.tbmodels', 'orm/calculation/job/tbmodels'),
     ('parsers.plugins.tbmodels', 'parsers/plugins/tbmodels'),
+    ('parsers.plugins.tbmodels', 'parsers/plugins/tbmodels'),
+    ('workflows.tbmodels', 'workflows/tbmodels'),
     # ('orm.data.vasp', 'orm/data/vasp'),
-    # ('workflows.vasp', 'workflows/vasp'),
     # ('tools.codespc.vasp', 'tools/codespecific/vasp'),
     # ('djsite.db.subtests.vasp', 'djsite/db/subtests/vasp'),
     # ('commands', 'cmdline/vasp'),
