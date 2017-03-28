@@ -3,6 +3,7 @@
 #
 # Author:  Dominik Gresch <greschd@gmx.ch>
 
+import os
 import itertools
 
 import numpy as np
@@ -59,7 +60,7 @@ def run_symmetricextraction():
     params['wannier_code'] = 'Wannier90_2.1.0'
     k_values = [x if x <= 0.5 else -1 + x for x in np.linspace(0, 1, 6, endpoint=False)]
     k_points = [list(reversed(k)) for k in itertools.product(k_values, repeat=3)]
-    params['wannier_settings'] = DataFactory('parameter')(
+    wannier_settings = DataFactory('parameter')(
         dict=dict(
             num_wann=36,
             use_bloch_phases=True,
@@ -77,9 +78,11 @@ def run_symmetricextraction():
             kpoints=k_points
         )
     )
+    wannier_settings.store()
+    params['wannier_settings'] = wannier_settings
     params['symmetries'] = get_singlefile_instance(u'Symmetries for InAs', 'reference_input/symmetries.hdf5')
     wfobj = WorkflowFactory('symmetrictbextraction')(params=params)
-    wfobj.store()
+    wfobj.store_all()
     wfobj.start()
 
 
