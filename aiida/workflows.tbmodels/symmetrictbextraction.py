@@ -54,7 +54,7 @@ class SymmetrictbextractionWorkflow(Workflow):
             return
 
         self.append_to_report("Running Wannier90 calculation...")
-        self.attach_calculation(run_wswannier(self))
+        self.attach_calculation(self.run_wswannier())
         self.next(self.parse)
 
     def setup_tbmodels(self, calc):

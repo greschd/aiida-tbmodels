@@ -89,4 +89,3 @@ def run_symmetricextraction():
 
 if __name__ == '__main__':
     run_symmetricextraction()
-print(get_input_folder())
