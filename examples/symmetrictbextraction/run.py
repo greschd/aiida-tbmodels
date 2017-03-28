@@ -3,6 +3,8 @@
 #
 # Author:  Dominik Gresch <greschd@gmx.ch>
 
+import os
+
 from aiida.orm import QueryBuilder
 
 def get_input_folder():
