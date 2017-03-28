@@ -85,7 +85,7 @@ def run_symmetricextraction():
     wfobj = WorkflowFactory('tbmodels.symmetrictbextraction')(params=params)
     wfobj.store()
     wfobj.start()
-
+    print('Submitted workflow {}'.format(wfobj.pk))
 
 if __name__ == '__main__':
     run_symmetricextraction()
