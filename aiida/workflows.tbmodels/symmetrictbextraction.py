@@ -15,21 +15,21 @@ class SymmetrictbextractionWorkflow(Workflow):
     def __init__(self, **kwargs):
         super(SymmetrictbextractionWorkflow, self).__init__(**kwargs)
 
-    # def validate_input(self):
-    #     """
-    #     Check if all necessary inputs are present
-    #     """
-    #     params = self.get_parameters()
-    #     for key in ['wannier_data', 'wannier_settings', 'symmetries']:
-    #         if key not in params:
-    #             raise InputValidationError('Missing input key {}'.format(key))
+    def validate_input(self):
+        """
+        Check if all necessary inputs are present
+        """
+        pass
+        # params = self.get_parameters()
+        # for key in ['wannier_data', 'wannier_settings', 'symmetries']:
+        #     if key not in params:
+        #         raise InputValidationError('Missing input key {}'.format(key))
 
     def run_wswannier(self):
-        # self.validate_input()
         input_archive = self.get_parameter('wannier_data')
         calc = CalculationFactory('vasp.wswannier')()
-        code = Code.get_from_string(self._wannier_code)
-        calc.use_code(self.get_parameter('wannier_code'))
+        code = Code.get_from_string(self.get_parameter('wannier_code'))
+        calc.use_code(code)
         # No MPI
         calc.set_resources(dict(num_machines=1, tot_num_mpiprocs=1))
         calc.set_computer(code.get_computer())
@@ -47,4 +47,57 @@ class SymmetrictbextractionWorkflow(Workflow):
 
     @Workflow.step
     def start(self):
-        ...
+        try:
+            self.validate_input()
+        except InputValidationError:
+            self.next(self.exit)
+            return
+
+        self.append_to_report("Running Wannier90 calculation...")
+        self.attach_calculation(run_wswannier(self))
+        self.next(self.parse)
+
+    def setup_tbmodels(self, calc):
+        code = Code.get_from_string(self.get_parameter('tbmodels_code'))
+        calc.use_code(code)
+        calc.set_resources({'num_machines': 1})
+        calc.set_withmpi(False)
+        calc.set_computer(code.get_computer())
+
+    def run_parse(self, wannier_folder):
+        calc = CalculationFactory('tbmodels.parse')
+        self.setup_tbmodels(calc)
+
+        calc.use_wannier_folder(wannier_folder)
+        calc.store_all()
+        return calc
+
+    @Workflow.step
+    def parse(self):
+        wannier_calc = self.get_step_calculations(self.start)[0]
+        wannier_folder = wannier_calc.out.tb_model
+        self.append_to_report("Parsing Wannier90 output to tbmodels format...")
+        self.attach_calculation(self.run_parse(wannier_folder))
+        self.next(self.symmetrize)
+
+    def run_symmetrize(self, tbmodel_file):
+        calc = CalculationFactory('tbmodels.symmetrize')
+        self.setup_tbmodels(calc)
+        calc.use_tb_model(tbmodel_file)
+        calc.use_symmetries(self.get_parameter("symmetries"))
+        calc.store_all()
+        return calc
+
+    @Workflow.step
+    def symmetrize(self):
+        parse_calc = self.get_step_calculations(self.parse)[0]
+        tbmodel_file = parse_calc.tb_model
+        self.append_to_report("Symmetrizing tight-binding model...")
+        self.attach_calculation(self.run_symmetrize(tbmodel_file))
+
+    @Workflow.step
+    def finalize(self):
+        sym_calc = self.get_step_calculations(self.symmetrize)[0]
+        self.add_result('tb_model', sym_calc.out.tb_model)
+        self.append_to_report('Added symmetrized tb_model to results.')
+        self.next(self.exit)
