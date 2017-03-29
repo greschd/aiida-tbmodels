@@ -64,7 +64,8 @@ def run_symmetricextraction():
     k_points = [list(reversed(k)) for k in itertools.product(k_values, repeat=3)]
     wannier_settings = DataFactory('parameter')(
         dict=dict(
-            num_wann=36,
+            num_wann=14,
+            num_bands=36,
             use_bloch_phases=True,
             spinors=True,
             unit_cell_cart=[
