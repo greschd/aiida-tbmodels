@@ -94,6 +94,7 @@ class SymmetrictbextractionWorkflow(Workflow):
         tbmodel_file = parse_calc.out.tb_model
         self.append_to_report("Symmetrizing tight-binding model...")
         self.attach_calculation(self.run_symmetrize(tbmodel_file))
+        self.next(self.finalize)
 
     @Workflow.step
     def finalize(self):
