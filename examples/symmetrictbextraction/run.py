@@ -59,6 +59,7 @@ def run_symmetricextraction():
     # wannier code and queue settings
     params['wannier_queue'] = 'dphys_compute'
     params['wannier_code'] = 'Wannier90_2.1.0'
+    params['tbmodels_code'] = 'tbmodels_dev'
     k_values = [x if x <= 0.5 else -1 + x for x in np.linspace(0, 1, 6, endpoint=False)]
     k_points = [list(reversed(k)) for k in itertools.product(k_values, repeat=3)]
     wannier_settings = DataFactory('parameter')(
