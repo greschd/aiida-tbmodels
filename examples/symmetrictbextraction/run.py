@@ -66,7 +66,12 @@ def run_symmetricextraction():
         dict=dict(
             num_wann=14,
             num_bands=36,
-            use_bloch_phases=True,
+            dis_num_iter=1000,
+            num_iter=0,
+            dis_win_min=-4.5,
+            dis_win_max=16.,
+            dis_froz_min=-4.,
+            dis_froz_max=6.5,
             spinors=True,
             unit_cell_cart=[
                 [0, 3.2395, 3.2395],
