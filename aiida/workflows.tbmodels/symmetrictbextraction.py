@@ -65,7 +65,7 @@ class SymmetrictbextractionWorkflow(Workflow):
         calc.set_computer(code.get_computer())
 
     def run_parse(self, wannier_folder):
-        calc = CalculationFactory('tbmodels.parse')
+        calc = CalculationFactory('tbmodels.parse')()
         self.setup_tbmodels(calc)
 
         calc.use_wannier_folder(wannier_folder)
@@ -81,7 +81,7 @@ class SymmetrictbextractionWorkflow(Workflow):
         self.next(self.symmetrize)
 
     def run_symmetrize(self, tbmodel_file):
-        calc = CalculationFactory('tbmodels.symmetrize')
+        calc = CalculationFactory('tbmodels.symmetrize')()
         self.setup_tbmodels(calc)
         calc.use_tb_model(tbmodel_file)
         calc.use_symmetries(self.get_parameter("symmetries"))
