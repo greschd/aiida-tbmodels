@@ -38,7 +38,7 @@ class SymmetrictbextractionWorkflow(Workflow):
         # set default for write_tb etc.
         wannier_settings = self.get_parameter('wannier_settings').get_dict()
         wannier_settings.setdefault('write_hr', True)
-        wannier_settings.setdefault('write_xyz', True)
+        # wannier_settings.setdefault('write_xyz', True)
         wannier_settings.setdefault('use_ws_distance', True)
         # TODO: caching!
         calc.use_settings(DataFactory('parameter')(dict=wannier_settings))
