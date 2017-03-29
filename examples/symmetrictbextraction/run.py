@@ -9,25 +9,25 @@ import itertools
 import numpy as np
 from aiida.orm import QueryBuilder
 
-def get_input_folder():
-    folder_description = u'InAs Wannier90 input from HF VASP calculation'
+def get_input_archive():
+    archive_description = u'InAs Wannier90 input from HF VASP calculation'
     qb = QueryBuilder()
-    FolderData = DataFactory('folder')
+    ArchiveData = DataFactory('archive')
     qb.append(
-        FolderData,
-        filters={'description': {'==': folder_description}}
+        ArchiveData,
+        filters={'description': {'==': archive_description}}
     )
     res = qb.all()
     if len(res) == 0:
         # create archive
-        res = FolderData()
-        input_folder = './reference_input/wannier_folder'
-        for fn in os.listdir(input_folder):
-            res.add_path(os.path.abspath(os.path.join(input_folder, fn)), fn)
-        res.description = folder_description
+        res = ArchiveData()
+        input_archive = './reference_input/wannier_archive'
+        for fn in os.listdir(input_archive):
+            res.add_file(os.path.abspath(os.path.join(input_archive, fn)), fn)
+        res.description = archive_description
         res.store()
     elif len(res) > 1:
-        raise ValueError('Query returned more than one matching FolderData instance.')
+        raise ValueError('Query returned more than one matching ArchiveData instance.')
     else:
         res = res[0][0]
     return res
@@ -54,7 +54,7 @@ def get_singlefile_instance(description, path):
 
 def run_symmetricextraction():
     params = dict()
-    params['wannier_data'] = get_input_folder()
+    params['wannier_data'] = get_input_archive()
 
     # wannier code and queue settings
     params['wannier_queue'] = 'dphys_compute'
