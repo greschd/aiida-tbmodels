@@ -12,7 +12,7 @@ from aiida.orm import QueryBuilder
 def get_input_archive():
     archive_description = u'InAs Wannier90 input from HF VASP calculation'
     qb = QueryBuilder()
-    ArchiveData = DataFactory('archive')
+    ArchiveData = DataFactory('vasp.archive')
     qb.append(
         ArchiveData,
         filters={'description': {'==': archive_description}}
