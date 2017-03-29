@@ -91,7 +91,7 @@ class SymmetrictbextractionWorkflow(Workflow):
     @Workflow.step
     def symmetrize(self):
         parse_calc = self.get_step_calculations(self.parse)[0]
-        tbmodel_file = parse_calc.tb_model
+        tbmodel_file = parse_calc.out.tb_model
         self.append_to_report("Symmetrizing tight-binding model...")
         self.attach_calculation(self.run_symmetrize(tbmodel_file))
 
