@@ -21,7 +21,10 @@ def run_slice():
     ))
     calc.set_withmpi(False)
     calc.set_computer(Computer.get('localhost'))
-    calc.use_slice_idx(DataFactory('tbmodels.list')([0, 3, 2, 1]))
+    slice_idx = DataFactory('tbmodels.list')()
+    slice_idx.value = [0, 3, 2, 1]
+    calc.use_slice_idx(slice_idx)
+    # calc.use_slice_idx(DataFactory('tbmodels.list')([0, 3, 2, 1]))
 
     calc.store_all()
     calc.submit()
