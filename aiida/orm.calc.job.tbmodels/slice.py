@@ -21,7 +21,7 @@ class SliceCalculation(SingleModelInputBase):
                 linkname='slice_idx',
                 docstring="Indices of the orbitals which are sliced from the model."
             )
-        ))
+        )
         return retdict
 
     def _prepare_for_submission(self, tempfolder, inputdict):

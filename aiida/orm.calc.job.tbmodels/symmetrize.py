@@ -22,7 +22,7 @@ class SymmetrizeCalculation(SingleModelInputBase):
                 linkname='symmetries',
                 docstring="File containing the symmetries in HDF5 format."
             )
-        ))
+        )
         return retdict
 
     def _prepare_for_submission(self, tempfolder, inputdict):
