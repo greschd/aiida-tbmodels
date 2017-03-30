@@ -40,7 +40,7 @@ class TbmodelsBase(JobCalculation):
 class SingleModelInputBase(TbmodelsBase):
     @classproperty
     def _use_methods(cls):
-        retdict = super(SingleModelInput, cls)._use_methods
+        retdict = super(SingleModelInputBase, cls)._use_methods
         retdict.update(dict(
             tb_model=dict(
                 valid_types=SinglefileData,
