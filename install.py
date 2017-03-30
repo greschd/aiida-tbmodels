@@ -55,7 +55,7 @@ install_paths = [
     ('parsers.plugins.tbmodels', 'parsers/plugins/tbmodels'),
     ('parsers.plugins.tbmodels', 'parsers/plugins/tbmodels'),
     ('workflows.tbmodels', 'workflows/tbmodels'),
-    # ('orm.data.vasp', 'orm/data/vasp'),
+    ('orm.data.tbmodels', 'orm/data/tbmodels'),
     # ('tools.codespc.vasp', 'tools/codespecific/vasp'),
     # ('djsite.db.subtests.vasp', 'djsite/db/subtests/vasp'),
     # ('commands', 'cmdline/vasp'),
