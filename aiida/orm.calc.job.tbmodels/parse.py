@@ -12,7 +12,6 @@ from aiida.common.exceptions import InputValidationError, ValidationError
 from ._base import TbmodelsBase
 
 class ParseCalculation(TbmodelsBase):
-
     @classproperty
     def _use_methods(cls):
         retdict = super(ParseCalculation, cls)._use_methods

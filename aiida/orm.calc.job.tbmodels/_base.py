@@ -6,8 +6,8 @@ import os
 import json
 
 from aiida.orm import JobCalculation
-from aiida.orm.data.folder import FolderData
 from aiida.common.utils import classproperty
+from aiida.orm.data.singlefile import SinglefileData
 from aiida.common.exceptions import InputValidationError, ValidationError
 from aiida.common.datastructures import CalcInfo, CodeInfo
 
@@ -36,3 +36,28 @@ class TbmodelsBase(JobCalculation):
         calcinfo.codes_info = [codeinfo]
 
         return calcinfo, codeinfo
+
+class SingleModelInputBase(TbmodelsBase):
+    @classproperty
+    def _use_methods(cls):
+        retdict = super(SingleModelInput, cls)._use_methods
+        retdict.update(dict(
+            tb_model=dict(
+                valid_types=SinglefileData,
+                additional_parameter=None,
+                linkname='tb_model',
+                docstring="Input model in TBmodels HDF5 format."
+            )
+        ))
+        return retdict
+
+    def _prepare_for_submission(self, tempfolder, inputdict):
+        try:
+            model_file = inputdict.pop(self.get_linkname('tb_model'))
+        except KeyError:
+            raise InputValidationError("No tight-binding model 'tb_model' specified for this calculation.")
+
+        calcinfo, codeinfo = super(SingleModelInputBase, self)._prepare_for_submission(tempfolder, inputdict)
+        calcinfo.local_copy_list = [(model_file.get_file_abs_path(), 'model.hdf5')]
+
+        return model_file, calcinfo, codeinfo
