@@ -14,7 +14,7 @@ class ListData(Data):
 
     @property
     def value(self):
-        self.get_attr('list')
+        return self.get_attr('list')
 
     @value.setter
     def value(self, value):
