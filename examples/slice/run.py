@@ -12,6 +12,7 @@ from aiida.orm import DataFactory, Code, CalculationFactory, Computer, QueryBuil
 
 def get_singlefile_instance(description, path):
     qb = QueryBuilder()
+    SinglefileData = DataFactory('singlefile')
     qb.append(
         SinglefileData,
         filters={'description': {'==': description}}
