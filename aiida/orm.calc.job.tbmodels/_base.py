@@ -24,7 +24,7 @@ class TbmodelsBase(JobCalculation):
         except KeyError:
             raise InputValidationError('No code specified for this calculation.')
         if inputdict:
-            raise ValidationError('Cannot add other nodes')
+            raise ValidationError('Cannot add other nodes. Remaining input: {}'.format(inputdict))
 
         calcinfo = CalcInfo()
         calcinfo.uuid = self.uuid

@@ -29,10 +29,6 @@ class SliceCalculation(SingleModelInputBase):
             slice_idx = inputdict.pop(self.get_linkname('slice_idx'))
         except KeyError:
             raise InputValidationError('No slice_idx specified for this calculation.')
-        except KeyError:
-            raise InputValidationError('No code specified for this calculation.')
-        if inputdict:
-            raise ValidationError('Cannot add other nodes')
 
         model_file, calcinfo, codeinfo = super(SliceCalculation, self)._prepare_for_submission(tempfolder, inputdict)
 

@@ -30,10 +30,6 @@ class SymmetrizeCalculation(SingleModelInputBase):
             symmetries_file = inputdict.pop(self.get_linkname('symmetries'))
         except KeyError:
             raise InputValidationError("No symmetries specified for this calculation.")
-        except KeyError:
-            raise InputValidationError('No code specified for this calculation.')
-        if inputdict:
-            raise ValidationError('Cannot add other nodes')
 
         model_file, calcinfo, codeinfo = super(SymmetrizeCalculation, self)._prepare_for_submission(tempfolder, inputdict)
 
