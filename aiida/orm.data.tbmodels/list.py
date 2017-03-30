@@ -9,8 +9,8 @@ from aiida.orm.data import Data
 
 class ListData(Data):
     def __init__(self, value=[]):
-        self.value = value
         super(ListData, self).__init__()
+        self.value = value
 
     @property
     def value(self):
