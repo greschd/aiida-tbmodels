@@ -8,6 +8,7 @@ from __future__ import division, print_function, unicode_literals
 import os
 import itertools
 
+from aiida.orm.data import Data
 from aiida.orm import Code, CalculationFactory, Computer, QueryBuilder
 
 def run_slice():
@@ -21,7 +22,9 @@ def run_slice():
     ))
     calc.set_withmpi(False)
     calc.set_computer(Computer.get('localhost'))
-    calc.use_slice_idx([0, 3, 2, 1])
+    slice_idx = Data()
+    slice_idx.value = [0, 3, 2, 1]
+    calc.use_slice_idx(slice_idx)
 
     calc.store_all()
     calc.submit()
