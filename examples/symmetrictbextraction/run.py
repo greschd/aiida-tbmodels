@@ -10,7 +10,7 @@ import numpy as np
 from aiida.orm import QueryBuilder
 
 def get_input_archive():
-    archive_description = u'InAs Wannier90 input from HF VASP calculation'
+    archive_description = u'InSb Wannier90 input from HF VASP calculation'
     qb = QueryBuilder()
     ArchiveData = DataFactory('vasp.archive')
     qb.append(
