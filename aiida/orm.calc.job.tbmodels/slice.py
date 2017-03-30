@@ -13,7 +13,7 @@ from ._base import SingleModelInputBase
 class SliceCalculation(SingleModelInputBase):
     @classproperty
     def _use_methods(cls):
-        retdict = super(SymmetrizeCalculation, cls)._use_methods
+        retdict = super(SliceCalculation, cls)._use_methods
         retdict.update(
             slice_idx=dict(
                 valid_types=list,
