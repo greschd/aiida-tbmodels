@@ -22,6 +22,7 @@ class SymmetrictbextractionWorkflow(Workflow):
         """
         params = self.get_parameters()
         self.add_attribute('has_slice', 'slice_idx' in params)
+        self.add_attribute('has_symmetries', 'symmetries' in params)
 
         SinglefileData = DataFactory('singlefile')
         ArchiveData = DataFactory('vasp.archive')
@@ -33,11 +34,19 @@ class SymmetrictbextractionWorkflow(Workflow):
             ('wannier_data', ArchiveData),
             ('wannier_queue', basestring),
             ('wannier_settings', ParameterData),
-            ('symmetries', SinglefileData),
             ('tbmodels_code', basestring)
         ]
+        extra_steps = [self.parse]
         if self.get_attribute('has_slice'):
             param_types += [('slice_idx', ListData)]
+            extra_steps += [self.slice]
+        if self.get_attribute('has_symmetries'):
+            param_types += [('symmetries', SinglefileData)]
+            extra_steps += [self.symmetrize]
+        extra_steps += [self.finalize]
+        self.add_attribute('steps_todo', extra_steps)
+        self.add_attribute('steps_done', [])
+
         for key, valid_type in param_types:
             if key not in params:
                 raise InputValidationError('Missing input key {}'.format(key))
@@ -53,6 +62,18 @@ class SymmetrictbextractionWorkflow(Workflow):
                 list(params.keys())
             ))
         self.append_to_report("Starting workflow with parameters: {}".format(self.get_parameters()))
+
+    @property
+    def previous_step(self):
+        return self.get_attribute('steps_done')[-1]
+
+    def get_next_step(self):
+        steps_todo = self.get_attribute('steps_todo')
+        steps_done = self.get_attribute('steps_done')
+        steps_done += [steps_todo.pop(0)]
+        self.add_attribute('steps_todo', steps_todo)
+        self.add_attribute('steps_done', steps_done)
+        return steps_todo[0]
 
     def run_wswannier(self):
         input_archive = self.get_parameter('wannier_data')
@@ -79,7 +100,7 @@ class SymmetrictbextractionWorkflow(Workflow):
         self.validate_input()
         self.append_to_report("Running Wannier90 calculation...")
         self.attach_calculation(self.run_wswannier())
-        self.next(self.parse)
+        self.next(self.get_next_step())
 
     def setup_tbmodels(self, calc):
         code = Code.get_from_string(self.get_parameter('tbmodels_code'))
@@ -102,10 +123,7 @@ class SymmetrictbextractionWorkflow(Workflow):
         wannier_folder = wannier_calc.out.tb_model
         self.append_to_report("Parsing Wannier90 output to tbmodels format...")
         self.attach_calculation(self.run_parse(wannier_folder))
-        if self.get_attribute('has_slice'):
-            self.next(self.slice)
-        else:
-            self.next(self.symmetrize)
+        self.next(self.get_next_step())
 
     def run_slice(self, tbmodel_file):
         calc = CalculationFactory('tbmodels.slice')()
@@ -117,11 +135,11 @@ class SymmetrictbextractionWorkflow(Workflow):
 
     @Workflow.step
     def slice(self):
-        calc = self.get_step_calculations(self.parse)[0]
+        calc = self.get_step_calculations(self.previous_step)[0]
         tbmodel_file = calc.out.tb_model
         self.append_to_report("Slicing tight-binding model...")
         self.attach_calculation(self.run_slice(tbmodel_file))
-        self.next(self.symmetrize)
+        self.next(self.get_next_step())
 
     def run_symmetrize(self, tbmodel_file):
         calc = CalculationFactory('tbmodels.symmetrize')()
@@ -133,14 +151,15 @@ class SymmetrictbextractionWorkflow(Workflow):
 
     @Workflow.step
     def symmetrize(self):
-        if self.get_attribute('has_slice'):
-            calc = self.get_step_calculations(self.slice)[0]
-        else:
-            calc = self.get_step_calculations(self.parse)[0]
+        calc = self.get_step_calculations(self.previous_step)[0]
+        # if self.get_attribute('has_slice'):
+        #     calc = self.get_step_calculations(self.slice)[0]
+        # else:
+        #     calc = self.get_step_calculations(self.parse)[0]
         tbmodel_file = calc.out.tb_model
         self.append_to_report("Symmetrizing tight-binding model...")
         self.attach_calculation(self.run_symmetrize(tbmodel_file))
-        self.next(self.finalize)
+        self.next(self.get_next_step())
 
     @Workflow.step
     def finalize(self):
