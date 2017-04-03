@@ -19,8 +19,8 @@ class SymmetrictbextractionWorkflow(Workflow):
         """
         Check if all necessary inputs are present
         """
-        pass
-        # params = self.get_parameters()
+        params = self.get_parameters()
+        self._with_slice = 'slice' in params
         # for key in ['wannier_data', 'wannier_settings', 'symmetries']:
         #     if key not in params:
         #         raise InputValidationError('Missing input key {}'.format(key))
@@ -78,6 +78,25 @@ class SymmetrictbextractionWorkflow(Workflow):
         wannier_folder = wannier_calc.out.tb_model
         self.append_to_report("Parsing Wannier90 output to tbmodels format...")
         self.attach_calculation(self.run_parse(wannier_folder))
+        if self._with_slice:
+            self.next(self.slice)
+        else:
+            self.next(self.symmetrize)
+
+    def run_slice(self, tbmodel_file):
+        calc = CalculationFactory('tbmodels.slice')()
+        self.setup_tbmodels(calc)
+        calc.use_tb_model(tbmodel_file)
+        calc.use_slice(self.get_parameter("slice"))
+        calc.store_all()
+        return calc
+
+    @Workflow.step
+    def slice(self):
+        calc = self.get_step_calculations(self.parse)[0]
+        tbmodel_file = calc.out.tb_model
+        self.append_to_report("Slicing tight-binding model...")
+        self.attach_calculation(self.run_slice(tbmodel_file))
         self.next(self.symmetrize)
 
     def run_symmetrize(self, tbmodel_file):
@@ -90,8 +109,11 @@ class SymmetrictbextractionWorkflow(Workflow):
 
     @Workflow.step
     def symmetrize(self):
-        parse_calc = self.get_step_calculations(self.parse)[0]
-        tbmodel_file = parse_calc.out.tb_model
+        if self._with_slice:
+            calc = self.get_step_calculations(self.slice)[0]
+        else:
+            calc = self.get_step_calculations(self.parse)[0]
+        tbmodel_file = calc.out.tb_model
         self.append_to_report("Symmetrizing tight-binding model...")
         self.attach_calculation(self.run_symmetrize(tbmodel_file))
         self.next(self.finalize)
