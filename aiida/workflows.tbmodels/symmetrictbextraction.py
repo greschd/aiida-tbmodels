@@ -21,9 +21,35 @@ class SymmetrictbextractionWorkflow(Workflow):
         """
         params = self.get_parameters()
         self.add_attribute('has_slice', 'slice_idx' in params)
-        # for key in ['wannier_data', 'wannier_settings', 'symmetries']:
-        #     if key not in params:
-        #         raise InputValidationError('Missing input key {}'.format(key))
+
+        SinglefileData = DataFactory('singlefile')
+        ArchiveData = DataFactory('vasp.archive')
+        ParameterData = DataFactory('parameter')
+        ListData = DataFactory('tbmodels.list')
+
+        param_types = [
+            ('wannier_code', str),
+            ('wannier_data', ArchiveData),
+            ('wannier_queue', str),
+            ('symmetry', SinglefileData),
+            ('tbmodels_code', str)
+        ]
+        if self.get_attribute('has_slice'):
+            param_types += [('slice_idx', ListData)]
+        for key, valid_type in param_types:
+            if key not in params:
+                raise InputValidationError('Missing input key {}'.format(key))
+            value = params.pop(key)
+            if not isinstance(value, valid_type):
+                raise InputValidationError(
+                    "Input parameter '{key}' is of invalid type '{type}', should be '{valid_type}'.".format(
+                        key=key, type=type(value), valid_type=valid_type
+                    )
+                )
+        if params:
+            raise InputValidationError('Unrecognized input parameters {}'.format(
+                list(params.keys())
+            ))
 
     def run_wswannier(self):
         input_archive = self.get_parameter('wannier_data')
