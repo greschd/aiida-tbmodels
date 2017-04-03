@@ -34,6 +34,7 @@ class SymmetrictbextractionWorkflow(Workflow):
             ('wannier_code', basestring),
             ('wannier_data', ArchiveData),
             ('wannier_queue', basestring),
+            ('wannier_settings', ParameterData),
             ('symmetries', SinglefileData),
             ('tbmodels_code', basestring)
         ]
