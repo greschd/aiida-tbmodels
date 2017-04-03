@@ -107,4 +107,4 @@ if __name__ == '__main__':
     parser.add_argument('--symmetries', dest='symmetries', action='store_true')
     args = parser.parse_args()
 
-    run_extraction(**dict(args))
+    run_extraction(**vars(args))
