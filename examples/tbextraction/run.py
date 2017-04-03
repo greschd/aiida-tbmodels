@@ -4,6 +4,8 @@
 # Author:  Dominik Gresch <greschd@gmx.ch>
 
 import os
+import sys
+import argparse
 import itertools
 
 import numpy as np
@@ -52,7 +54,7 @@ def get_singlefile_instance(description, path):
         res = res[0][0]
     return res
 
-def run_symmetricextraction():
+def run_extraction(slice=True, symmetries=True):
     params = dict()
     params['wannier_data'] = get_input_archive()
 
@@ -88,14 +90,21 @@ def run_symmetricextraction():
     )
     wannier_settings.store()
     params['wannier_settings'] = wannier_settings
-    params['symmetries'] = get_singlefile_instance(u'Symmetries for InAs', 'reference_input/symmetries.hdf5')
-    slice_idx = DataFactory('tbmodels.list')(value=[0, 2, 3, 1, 5, 6, 4, 7, 9, 10, 8, 12, 13, 11])
-    slice_idx.store()
-    params['slice_idx'] = slice_idx
+    if symmetries:
+        params['symmetries'] = get_singlefile_instance(u'Symmetries for InAs', 'reference_input/symmetries.hdf5')
+    if slice:
+        slice_idx = DataFactory('tbmodels.list')(value=[0, 2, 3, 1, 5, 6, 4, 7, 9, 10, 8, 12, 13, 11])
+        slice_idx.store()
+        params['slice_idx'] = slice_idx
     wfobj = WorkflowFactory('tbmodels.tbextraction')(params=params)
     wfobj.store()
     wfobj.start()
     print('Submitted workflow {}'.format(wfobj.pk))
 
 if __name__ == '__main__':
-    run_symmetricextraction()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--slice', dest='slice', action='store_true')
+    parser.add_argument('--symmetries', dest='symmetries', action='store_true')
+    args = parser.parse_args()
+
+    run_extraction(**args)
