@@ -3,8 +3,6 @@
 #
 # Author:  Dominik Gresch <greschd@gmx.ch>
 
-import copy
-
 from past.builtins import basestring
 from aiida.orm import (
     Code, Computer, DataFactory, CalculationFactory, QueryBuilder, Workflow
@@ -22,7 +20,7 @@ class SymmetrictbextractionWorkflow(Workflow):
         """
         Check if all necessary inputs are present
         """
-        params = copy.copy(self.get_parameters())
+        params = self.get_parameters()
         self.add_attribute('has_slice', 'slice_idx' in params)
 
         SinglefileData = DataFactory('singlefile')
