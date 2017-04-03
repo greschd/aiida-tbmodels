@@ -20,6 +20,7 @@ class SymmetrictbextractionWorkflow(Workflow):
         Check if all necessary inputs are present
         """
         params = self.get_parameters()
+        self.add_attribute('has_slice', 'slice_idx' in params)
         # for key in ['wannier_data', 'wannier_settings', 'symmetries']:
         #     if key not in params:
         #         raise InputValidationError('Missing input key {}'.format(key))
@@ -77,7 +78,7 @@ class SymmetrictbextractionWorkflow(Workflow):
         wannier_folder = wannier_calc.out.tb_model
         self.append_to_report("Parsing Wannier90 output to tbmodels format...")
         self.attach_calculation(self.run_parse(wannier_folder))
-        if 'slice_idx' in self.get_parameters():
+        if self.get_attribute('has_slice'):
             self.next(self.slice)
         else:
             self.next(self.symmetrize)
@@ -108,7 +109,7 @@ class SymmetrictbextractionWorkflow(Workflow):
 
     @Workflow.step
     def symmetrize(self):
-        if 'slice_idx' in self.get_parameters():
+        if self.get_attribute('has_slice'):
             calc = self.get_step_calculations(self.slice)[0]
         else:
             calc = self.get_step_calculations(self.parse)[0]
