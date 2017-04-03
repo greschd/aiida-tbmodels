@@ -70,10 +70,17 @@ class SymmetrictbextractionWorkflow(Workflow):
     def get_next_step(self):
         steps_todo = self.get_attribute('steps_todo')
         steps_done = self.get_attribute('steps_done')
-        steps_done += [steps_todo.pop(0)]
+        try:
+            current_step = self.get_attribute('current_step')
+            steps_done += [current_step]
+        except ValueError:
+            pass
+
+        current_step = steps_todo.pop(0)
+        self.add_attribute('current_step', current_step)
         self.add_attribute('steps_todo', steps_todo)
         self.add_attribute('steps_done', steps_done)
-        return eval('self.' + steps_todo[0])
+        return eval('self.' + current_step)
 
     def run_wswannier(self):
         input_archive = self.get_parameter('wannier_data')
