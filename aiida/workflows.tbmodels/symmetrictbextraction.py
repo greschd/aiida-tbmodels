@@ -3,6 +3,8 @@
 #
 # Author:  Dominik Gresch <greschd@gmx.ch>
 
+import copy
+
 from aiida.orm import (
     Code, Computer, DataFactory, CalculationFactory, QueryBuilder, Workflow
 )
@@ -19,7 +21,7 @@ class SymmetrictbextractionWorkflow(Workflow):
         """
         Check if all necessary inputs are present
         """
-        params = self.get_parameters()
+        params = copy.copy(self.get_parameters())
         self.add_attribute('has_slice', 'slice_idx' in params)
 
         SinglefileData = DataFactory('singlefile')
@@ -50,6 +52,7 @@ class SymmetrictbextractionWorkflow(Workflow):
             raise InputValidationError('Unrecognized input parameters {}'.format(
                 list(params.keys())
             ))
+        self.append_to_report("Starting workflow with parameters: {}".format(self.get_parameters()))
 
     def run_wswannier(self):
         input_archive = self.get_parameter('wannier_data')
@@ -75,9 +78,10 @@ class SymmetrictbextractionWorkflow(Workflow):
     def start(self):
         try:
             self.validate_input()
-        except InputValidationError:
+        except InputValidationError as e:
             self.next(self.exit)
-            return
+            raise e
+            # return
 
         self.append_to_report("Running Wannier90 calculation...")
         self.attach_calculation(self.run_wswannier())
