@@ -34,7 +34,7 @@ class SymmetrictbextractionWorkflow(Workflow):
             ('wannier_code', basestring),
             ('wannier_data', ArchiveData),
             ('wannier_queue', basestring),
-            ('symmetry', SinglefileData),
+            ('symmetries', SinglefileData),
             ('tbmodels_code', basestring)
         ]
         if self.get_attribute('has_slice'):
