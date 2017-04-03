@@ -169,7 +169,7 @@ class TbextractionWorkflow(Workflow):
 
     @Workflow.step
     def finalize(self):
-        sym_calc = self.get_step_calculations(self.symmetrize)[0]
-        self.add_result('tb_model', sym_calc.out.tb_model)
-        self.append_to_report('Added symmetrized tb_model to results.')
+        calc = self.get_step_calculations(self.previous_step)[0]
+        self.add_result('tb_model', calc.out.tb_model)
+        self.append_to_report('Added final tb_model to results.')
         self.next(self.exit)
