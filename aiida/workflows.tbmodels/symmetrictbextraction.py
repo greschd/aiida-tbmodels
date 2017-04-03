@@ -36,14 +36,14 @@ class SymmetrictbextractionWorkflow(Workflow):
             ('wannier_settings', ParameterData),
             ('tbmodels_code', basestring)
         ]
-        extra_steps = [self.parse]
+        extra_steps = ['parse']
         if self.get_attribute('has_slice'):
             param_types += [('slice_idx', ListData)]
-            extra_steps += [self.slice]
+            extra_steps += ['slice']
         if self.get_attribute('has_symmetries'):
             param_types += [('symmetries', SinglefileData)]
-            extra_steps += [self.symmetrize]
-        extra_steps += [self.finalize]
+            extra_steps += ['symmetrize']
+        extra_steps += ['finalize']
         self.add_attribute('steps_todo', extra_steps)
         self.add_attribute('steps_done', [])
 
@@ -65,7 +65,7 @@ class SymmetrictbextractionWorkflow(Workflow):
 
     @property
     def previous_step(self):
-        return self.get_attribute('steps_done')[-1]
+        return eval('self.' + self.get_attribute('steps_done')[-1])
 
     def get_next_step(self):
         steps_todo = self.get_attribute('steps_todo')
@@ -73,7 +73,7 @@ class SymmetrictbextractionWorkflow(Workflow):
         steps_done += [steps_todo.pop(0)]
         self.add_attribute('steps_todo', steps_todo)
         self.add_attribute('steps_done', steps_done)
-        return steps_todo[0]
+        return eval('self.' + steps_todo[0])
 
     def run_wswannier(self):
         input_archive = self.get_parameter('wannier_data')
