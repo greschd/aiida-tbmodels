@@ -9,12 +9,12 @@ from aiida.orm import (
 )
 from aiida.common.exceptions import InputValidationError
 
-class SymmetrictbextractionWorkflow(Workflow):
+class TbextractionWorkflow(Workflow):
     """
     This workflow takes a Wannier90 input and a symmetry file as input and returns the symmetrized TBmodels model.
     """
     def __init__(self, **kwargs):
-        super(SymmetrictbextractionWorkflow, self).__init__(**kwargs)
+        super(TbextractionWorkflow, self).__init__(**kwargs)
 
     def validate_input(self):
         """
@@ -68,6 +68,9 @@ class SymmetrictbextractionWorkflow(Workflow):
         return eval('self.' + self.get_attribute('steps_done')[-1])
 
     def get_next_step(self):
+        # This is a bit of a hack -- but it enables chaining the steps without
+        # having to write lots of logic to detect which was the previous step
+        # For it to work, get_next_step must be used in the self.next call.
         steps_todo = self.get_attribute('steps_todo')
         steps_done = self.get_attribute('steps_done')
         try:
@@ -159,10 +162,6 @@ class SymmetrictbextractionWorkflow(Workflow):
     @Workflow.step
     def symmetrize(self):
         calc = self.get_step_calculations(self.previous_step)[0]
-        # if self.get_attribute('has_slice'):
-        #     calc = self.get_step_calculations(self.slice)[0]
-        # else:
-        #     calc = self.get_step_calculations(self.parse)[0]
         tbmodel_file = calc.out.tb_model
         self.append_to_report("Symmetrizing tight-binding model...")
         self.attach_calculation(self.run_symmetrize(tbmodel_file))
