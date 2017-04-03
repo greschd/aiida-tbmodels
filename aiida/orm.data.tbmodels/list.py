@@ -19,3 +19,6 @@ class ListData(Data):
     @value.setter
     def value(self, value):
         self._set_attr('list', list(copy.deepcopy(value)))
+
+    def set_value(self, value):
+        self.value = value
