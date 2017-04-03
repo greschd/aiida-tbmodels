@@ -91,6 +91,7 @@ def run_symmetricextraction():
     params['symmetries'] = get_singlefile_instance(u'Symmetries for InAs', 'reference_input/symmetries.hdf5')
     slice_idx = DataFactory('tbmodels.list')()
     slice_idx.value = [0, 2, 3, 1, 5, 6, 4, 7, 9, 10, 8, 12, 13, 11]
+    slice_idx.store()
     params['slice_idx'] = slice_idx
     wfobj = WorkflowFactory('tbmodels.symmetrictbextraction')(params=params)
     wfobj.store()
