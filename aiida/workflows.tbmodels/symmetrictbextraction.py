@@ -20,7 +20,7 @@ class SymmetrictbextractionWorkflow(Workflow):
         Check if all necessary inputs are present
         """
         params = self.get_parameters()
-        self._with_slice = 'slice' in params
+        self._with_slice = 'slice_idx' in params
         # for key in ['wannier_data', 'wannier_settings', 'symmetries']:
         #     if key not in params:
         #         raise InputValidationError('Missing input key {}'.format(key))
@@ -87,7 +87,7 @@ class SymmetrictbextractionWorkflow(Workflow):
         calc = CalculationFactory('tbmodels.slice')()
         self.setup_tbmodels(calc)
         calc.use_tb_model(tbmodel_file)
-        calc.use_slice(self.get_parameter("slice"))
+        calc.use_slice_idx(self.get_parameter("slice_idx"))
         calc.store_all()
         return calc
 

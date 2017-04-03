@@ -89,6 +89,7 @@ def run_symmetricextraction():
     wannier_settings.store()
     params['wannier_settings'] = wannier_settings
     params['symmetries'] = get_singlefile_instance(u'Symmetries for InAs', 'reference_input/symmetries.hdf5')
+    slice_idx = 
     wfobj = WorkflowFactory('tbmodels.symmetrictbextraction')(params=params)
     wfobj.store()
     wfobj.start()
