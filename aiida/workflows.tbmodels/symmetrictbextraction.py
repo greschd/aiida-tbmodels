@@ -5,6 +5,7 @@
 
 import copy
 
+from past.builtins import basestring
 from aiida.orm import (
     Code, Computer, DataFactory, CalculationFactory, QueryBuilder, Workflow
 )
@@ -30,11 +31,11 @@ class SymmetrictbextractionWorkflow(Workflow):
         ListData = DataFactory('tbmodels.list')
 
         param_types = [
-            ('wannier_code', str),
+            ('wannier_code', basestring),
             ('wannier_data', ArchiveData),
-            ('wannier_queue', str),
+            ('wannier_queue', basestring),
             ('symmetry', SinglefileData),
-            ('tbmodels_code', str)
+            ('tbmodels_code', basestring)
         ]
         if self.get_attribute('has_slice'):
             param_types += [('slice_idx', ListData)]
@@ -76,13 +77,7 @@ class SymmetrictbextractionWorkflow(Workflow):
 
     @Workflow.step
     def start(self):
-        try:
-            self.validate_input()
-        except InputValidationError as e:
-            self.next(self.exit)
-            raise e
-            # return
-
+        self.validate_input()
         self.append_to_report("Running Wannier90 calculation...")
         self.attach_calculation(self.run_wswannier())
         self.next(self.parse)
