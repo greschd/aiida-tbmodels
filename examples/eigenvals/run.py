@@ -30,9 +30,9 @@ def get_singlefile_instance(description, path):
         res = res[0][0]
     return res
 
-def run_bands():
+def run_eigenvals():
     code = Code.get_from_string('tbmodels_dev')
-    calc = CalculationFactory('tbmodels.bands')()
+    calc = CalculationFactory('tbmodels.eigenvals')()
     calc.use_code(code)
 
     calc.use_tb_model(get_singlefile_instance(
@@ -58,4 +58,4 @@ def run_bands():
 
 
 if __name__ == '__main__':
-    run_bands()
+    run_eigenvals()
