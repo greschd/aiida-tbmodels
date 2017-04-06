@@ -11,6 +11,17 @@ from aiida.tools.codespecific.bandstructure_utils.io import write_kpoints
 from ._base import ModelInputBase
 
 class BandsCalculation(ModelInputBase):
+    def _init_internal_params(self):
+        super(BandsCalculation, self)._init_internal_params()
+
+        self._OUTPUT_FILE_NAME = 'eigenvals.hdf5'
+        self._default_parser = 'bandstructure_utils.bands'
+
+    def _prepare_for_submission(self, tempfolder, inputdict):
+        calcinfo, codeinfo = super(ModelOutputBase, self)._prepare_for_submission(tempfolder, inputdict)
+        calcinfo.retrieve_list = [self._OUTPUT_FILE_NAME]
+        return calcinfo, codeinfo
+
     @classproperty
     def _use_methods(cls):
         retdict = super(BandsCalculation, cls)._use_methods

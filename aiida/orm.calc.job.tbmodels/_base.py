@@ -32,7 +32,7 @@ class TbmodelsBase(JobCalculation):
 
 class ModelOutputBase(TbmodelsBase):
     def _init_internal_params(self):
-        super(TbmodelsBase, self)._init_internal_params()
+        super(ModelOutputBase, self)._init_internal_params()
 
         self._OUTPUT_FILE_NAME = 'model_out.hdf5'
         self._default_parser = 'tbmodels.model'
