@@ -16,7 +16,7 @@ class BandsCalculation(ModelInputBase):
         retdict = super(BandsCalculation, cls)._use_methods
         retdict.update(
             kpoints=dict(
-                valid_types=DataFactory('kpoints'),
+                valid_types=DataFactory('array.kpoints'),
                 additional_parameter=None,
                 linkname='kpoints',
                 docstring="Kpoints for which the eigenvalues are calculated."

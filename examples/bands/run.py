@@ -48,7 +48,7 @@ def run_bands():
     calc.set_withmpi(False)
     calc.set_computer(Computer.get('localhost'))
 
-    k_mesh = DataFactory('kpoints')()
+    k_mesh = DataFactory('array.kpoints')()
     k_mesh.set_kpoints_mesh([4, 4, 4], offset=[0, 0, 0])
     calc.use_kpoints(k_mesh)
 
