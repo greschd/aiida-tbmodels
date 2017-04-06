@@ -41,5 +41,5 @@ class EigenvalsCalculation(ModelInputBase):
 
         calcinfo, codeinfo = super(EigenvalsCalculation, self)._prepare_for_submission(tempfolder, inputdict)
 
-        codeinfo.cmdline_params = ['bands', '-k', 'kpoints.hdf5']
+        codeinfo.cmdline_params = ['eigenvals', '-k', 'kpoints.hdf5']
         return calcinfo
