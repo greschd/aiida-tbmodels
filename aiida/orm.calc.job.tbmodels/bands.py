@@ -25,9 +25,9 @@ class BandsCalculation(ModelInputBase):
         return retdict
 
     def _prepare_for_submission(self, tempfolder, inputdict):
-        calcinfo, codeinfo = super(BandsCalculation, self)._prepare_for_submission(tempfolder, inputdict)
-
         kpoints_file = tempfolder.get_abs_path('kpoints.hdf5')
         write_kpoints(inputdict.pop('kpoints'), kpoints_file)
+        
+        calcinfo, codeinfo = super(BandsCalculation, self)._prepare_for_submission(tempfolder, inputdict)
 
         codeinfo.cmdline_params = ['bands', '-k', 'kpoints.hdf5']
