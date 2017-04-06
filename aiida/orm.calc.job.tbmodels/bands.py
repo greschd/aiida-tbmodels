@@ -18,7 +18,7 @@ class BandsCalculation(ModelInputBase):
         self._default_parser = 'bandstructure_utils.bands'
 
     def _prepare_for_submission(self, tempfolder, inputdict):
-        calcinfo, codeinfo = super(ModelOutputBase, self)._prepare_for_submission(tempfolder, inputdict)
+        calcinfo, codeinfo = super(BandsCalculation, self)._prepare_for_submission(tempfolder, inputdict)
         calcinfo.retrieve_list = [self._OUTPUT_FILE_NAME]
         return calcinfo, codeinfo
 
