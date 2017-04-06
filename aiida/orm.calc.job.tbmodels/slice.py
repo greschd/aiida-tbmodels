@@ -10,7 +10,7 @@ from aiida.orm import DataFactory
 from aiida.common.utils import classproperty
 from aiida.common.exceptions import InputValidationError, ValidationError
 
-from ._base import ModelInputBase
+from ._base import ModelInputBase, ModelOutputBase
 
 class SliceCalculation(ModelInputBase, ModelOutputBase):
     @classproperty

@@ -9,7 +9,7 @@ from aiida.orm.data.folder import FolderData
 from aiida.common.utils import classproperty
 from aiida.common.exceptions import InputValidationError, ValidationError
 
-from ._base import TbmodelsBase
+from ._base import ModelOutputBase
 
 class ParseCalculation(ModelOutputBase):
     @classproperty
