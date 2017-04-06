@@ -17,11 +17,6 @@ class EigenvalsCalculation(ModelInputBase):
         self._OUTPUT_FILE_NAME = 'eigenvals.hdf5'
         self._default_parser = 'bandstructure_utils.bands'
 
-    def _prepare_for_submission(self, tempfolder, inputdict):
-        calcinfo, codeinfo = super(EigenvalsCalculation, self)._prepare_for_submission(tempfolder, inputdict)
-        calcinfo.retrieve_list = [self._OUTPUT_FILE_NAME]
-        return calcinfo, codeinfo
-
     @classproperty
     def _use_methods(cls):
         retdict = super(EigenvalsCalculation, cls)._use_methods
@@ -40,6 +35,7 @@ class EigenvalsCalculation(ModelInputBase):
         write_kpoints(inputdict.pop('kpoints'), kpoints_file)
 
         calcinfo, codeinfo = super(EigenvalsCalculation, self)._prepare_for_submission(tempfolder, inputdict)
+        calcinfo.retrieve_list = [self._OUTPUT_FILE_NAME]
 
         codeinfo.cmdline_params = ['eigenvals', '-k', 'kpoints.hdf5']
         return calcinfo
