@@ -10,9 +10,9 @@ from aiida.orm import DataFactory
 from aiida.common.utils import classproperty
 from aiida.common.exceptions import InputValidationError, ValidationError
 
-from ._base import SingleModelInputBase
+from ._base import ModelInputBase
 
-class SliceCalculation(SingleModelInputBase):
+class SliceCalculation(ModelInputBase, ModelOutputBase):
     @classproperty
     def _use_methods(cls):
         retdict = super(SliceCalculation, cls)._use_methods
@@ -32,7 +32,7 @@ class SliceCalculation(SingleModelInputBase):
         except KeyError:
             raise InputValidationError('No slice_idx specified for this calculation.')
 
-        model_file, calcinfo, codeinfo = super(SliceCalculation, self)._prepare_for_submission(tempfolder, inputdict)
+        calcinfo, codeinfo = super(SliceCalculation, self)._prepare_for_submission(tempfolder, inputdict)
 
         codeinfo.cmdline_params = ['slice', '-o', self._OUTPUT_FILE_NAME] + [str(x) for x in slice_idx]
 

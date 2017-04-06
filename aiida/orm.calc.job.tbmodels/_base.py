@@ -12,12 +12,6 @@ from aiida.common.exceptions import InputValidationError, ValidationError
 from aiida.common.datastructures import CalcInfo, CodeInfo
 
 class TbmodelsBase(JobCalculation):
-    def _init_internal_params(self):
-        super(TbmodelsBase, self)._init_internal_params()
-
-        self._OUTPUT_FILE_NAME = 'model_out.hdf5'
-        self._default_parser = 'tbmodels.model'
-
     def _prepare_for_submission(self, tempfolder, inputdict):
         try:
             code = inputdict.pop(self.get_linkname('code'))
@@ -29,7 +23,6 @@ class TbmodelsBase(JobCalculation):
         calcinfo = CalcInfo()
         calcinfo.uuid = self.uuid
         calcinfo.remote_copy_list = []
-        calcinfo.retrieve_list = [self._OUTPUT_FILE_NAME]
 
         codeinfo = CodeInfo()
         codeinfo.code_uuid = code.uuid
@@ -37,10 +30,22 @@ class TbmodelsBase(JobCalculation):
 
         return calcinfo, codeinfo
 
-class SingleModelInputBase(TbmodelsBase):
+class ModelOutputBase(TbmodelsBase):
+    def _init_internal_params(self):
+        super(TbmodelsBase, self)._init_internal_params()
+
+        self._OUTPUT_FILE_NAME = 'model_out.hdf5'
+        self._default_parser = 'tbmodels.model'
+
+    def _prepare_for_submission(self, tempfolder, inputdict):
+        calcinfo, codeinfo = super(ModelOutputBase, self)._prepare_for_submission(tempfolder, inputdict)
+        calcinfo.retrieve_list = [self._OUTPUT_FILE_NAME]
+        return calcinfo, codeinfo
+
+class ModelInputBase(TbmodelsBase):
     @classproperty
     def _use_methods(cls):
-        retdict = super(SingleModelInputBase, cls)._use_methods
+        retdict = super(ModelInputBase, cls)._use_methods
         retdict.update(dict(
             tb_model=dict(
                 valid_types=SinglefileData,
@@ -57,7 +62,7 @@ class SingleModelInputBase(TbmodelsBase):
         except KeyError:
             raise InputValidationError("No tight-binding model 'tb_model' specified for this calculation.")
 
-        calcinfo, codeinfo = super(SingleModelInputBase, self)._prepare_for_submission(tempfolder, inputdict)
+        calcinfo, codeinfo = super(ModelInputBase, self)._prepare_for_submission(tempfolder, inputdict)
         calcinfo.local_copy_list = [(model_file.get_file_abs_path(), 'model.hdf5')]
 
-        return model_file, calcinfo, codeinfo
+        return calcinfo, codeinfo

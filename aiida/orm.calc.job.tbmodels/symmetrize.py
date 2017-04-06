@@ -9,9 +9,9 @@ from aiida.orm.data.singlefile import SinglefileData
 from aiida.common.utils import classproperty
 from aiida.common.exceptions import InputValidationError, ValidationError
 
-from ._base import SingleModelInputBase
+from ._base import ModelInputBase
 
-class SymmetrizeCalculation(SingleModelInputBase):
+class SymmetrizeCalculation(ModelInputBase, ModelOutputBase):
     @classproperty
     def _use_methods(cls):
         retdict = super(SymmetrizeCalculation, cls)._use_methods
@@ -31,7 +31,7 @@ class SymmetrizeCalculation(SingleModelInputBase):
         except KeyError:
             raise InputValidationError("No symmetries specified for this calculation.")
 
-        model_file, calcinfo, codeinfo = super(SymmetrizeCalculation, self)._prepare_for_submission(tempfolder, inputdict)
+        calcinfo, codeinfo = super(SymmetrizeCalculation, self)._prepare_for_submission(tempfolder, inputdict)
 
         # add symmetries to the files to be copied
         calcinfo.local_copy_list += [
