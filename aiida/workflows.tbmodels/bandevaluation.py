@@ -26,7 +26,7 @@ class BandevaluationWorkflow(Workflow):
         SinglefileData = DataFactory('singlefile')
 
         param_types = [
-            ('tb_model', ParameterData),
+            ('tb_model', SinglefileData),
             ('reference_bands', BandsData),
             ('bandstructure_utils_code', basestring),
             ('tbmodels_code', basestring)
@@ -34,71 +34,43 @@ class BandevaluationWorkflow(Workflow):
         validate_input(params, param_types)
         self.append_to_report("Starting workflow with parameters: {}".format(self.get_parameters()))
 
-    # @Workflow.step
-    # def start(self):
-    #     self.validate_input()
-    #     self.append_to_report("Running Wannier90 calculation...")
-    #     self.attach_calculation(self.run_wswannier())
-    #     self.next(self.get_next_step())
+    def setup_calc(self, calc_string, code_param):
+        calc = CalculationFactory(calc_string)()
+        code = Code.get_from_string(self.get_parameter(code_param))
+        calc.use_code(code)
+        calc.set_resources({'num_machines': 1})
+        calc.set_withmpi(False)
+        calc.set_computer(code.get_computer())
+        return calc
 
-    # def setup_tbmodels(self, calc):
-    #     code = Code.get_from_string(self.get_parameter('tbmodels_code'))
-    #     calc.use_code(code)
-    #     calc.set_resources({'num_machines': 1})
-    #     calc.set_withmpi(False)
-    #     calc.set_computer(code.get_computer())
+    @Workflow.step
+    def start(self):
+        self.validate_input()
+        self.next(self.eigenvals)
 
-    # def run_parse(self, wannier_folder):
-    #     calc = CalculationFactory('tbmodels.parse')()
-    #     self.setup_tbmodels(calc)
-    #
-    #     calc.use_wannier_folder(wannier_folder)
-    #     calc.store_all()
-    #     return calc
-    #
-    # @Workflow.step
-    # def parse(self):
-    #     wannier_calc = self.get_step_calculations(self.start)[0]
-    #     wannier_folder = wannier_calc.out.tb_model
-    #     self.append_to_report("Parsing Wannier90 output to tbmodels format...")
-    #     self.attach_calculation(self.run_parse(wannier_folder))
-    #     self.next(self.get_next_step())
-    #
-    # def run_slice(self, tbmodel_file):
-    #     calc = CalculationFactory('tbmodels.slice')()
-    #     self.setup_tbmodels(calc)
-    #     calc.use_tb_model(tbmodel_file)
-    #     calc.use_slice_idx(self.get_parameter("slice_idx"))
-    #     calc.store_all()
-    #     return calc
-    #
-    # @Workflow.step
-    # def slice(self):
-    #     calc = self.get_step_calculations(self.previous_step)[0]
-    #     tbmodel_file = calc.out.tb_model
-    #     self.append_to_report("Slicing tight-binding model...")
-    #     self.attach_calculation(self.run_slice(tbmodel_file))
-    #     self.next(self.get_next_step())
-    #
-    # def run_symmetrize(self, tbmodel_file):
-    #     calc = CalculationFactory('tbmodels.symmetrize')()
-    #     self.setup_tbmodels(calc)
-    #     calc.use_tb_model(tbmodel_file)
-    #     calc.use_symmetries(self.get_parameter("symmetries"))
-    #     calc.store_all()
-    #     return calc
-    #
-    # @Workflow.step
-    # def symmetrize(self):
-    #     calc = self.get_step_calculations(self.previous_step)[0]
-    #     tbmodel_file = calc.out.tb_model
-    #     self.append_to_report("Symmetrizing tight-binding model...")
-    #     self.attach_calculation(self.run_symmetrize(tbmodel_file))
-    #     self.next(self.get_next_step())
-    #
-    # @Workflow.step
-    # def finalize(self):
-    #     calc = self.get_step_calculations(self.previous_step)[0]
-    #     self.add_result('tb_model', calc.out.tb_model)
-    #     self.append_to_report('Added final tb_model to results.')
-    #     self.next(self.exit)
+    @Workflow.step
+    def eigenvals(self):
+        calc = self.setup_calc('tbmodels.eigenvals', 'tbmodels_code')
+        calc.use_tb_model(self.get_parameter('tb_model'))
+        calc.use_kpoints(self.get_parameter('reference_bands'))
+        calc.store_all()
+        self.attach_calculation(calc)
+        self.append_to_report("Running TBmodels eigenvals calculation...")
+        self.next(self.difference)
+
+    @Workflow.step
+    def difference(self):
+        calc = self.setup_calc('bandstructure_utils.difference', 'bandstructure_utils_code')
+        calc.use_bands1(self.get_parameter('reference_bands'))
+        ev_calc = self.get_step_calculations(self.eigenvals)[0]
+        calc.use_bands2(ev_calc.out.bands)
+        calc.store_all()
+        self.attach_calculation(calc)
+        self.append_to_report("Running bandstructure_utils difference calculation...")
+        self.next(self.finalize)
+
+    @Workflow.step
+    def finalize(self):
+        calc = self.get_step_calculations(self.difference)[0]
+        self.add_result('difference', calc.res.diff)
+        self.next(self.exit)
