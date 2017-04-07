@@ -56,10 +56,10 @@ install_paths = [
     ('parsers.plugins.tbmodels', 'parsers/plugins/tbmodels'),
     ('workflows.tbmodels', 'workflows/tbmodels'),
     ('orm.data.tbmodels', 'orm/data/tbmodels'),
-    # ('tools.codespc.vasp', 'tools/codespecific/vasp'),
-    # ('djsite.db.subtests.vasp', 'djsite/db/subtests/vasp'),
-    # ('commands', 'cmdline/vasp'),
-    # ('../doc/source', '../docs/source/plugins/vasp')
+    # ('tools.codespc.tbmodels', 'tools/codespecific/tbmodels'),
+    # ('djsite.db.subtests.tbmodels', 'djsite/db/subtests/tbmodels'),
+    # ('commands', 'cmdline/tbmodels'),
+    # ('../doc/source', '../docs/source/plugins/tbmodels')
 ]
 
 colors = {'ok': '\033[92m',

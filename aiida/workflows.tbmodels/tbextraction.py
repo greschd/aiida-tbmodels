@@ -9,6 +9,8 @@ from aiida.orm import (
 )
 from aiida.common.exceptions import InputValidationError
 
+from ._validate_input import validate_input
+
 class TbextractionWorkflow(Workflow):
     """
     This workflow takes a Wannier90 input and a symmetry file as input and returns the symmetrized TBmodels model.
@@ -36,6 +38,8 @@ class TbextractionWorkflow(Workflow):
             ('wannier_settings', ParameterData),
             ('tbmodels_code', basestring)
         ]
+        validate_input(params, param_types)
+
         extra_steps = ['parse']
         if self.get_attribute('has_slice'):
             param_types += [('slice_idx', ListData)]
@@ -47,20 +51,6 @@ class TbextractionWorkflow(Workflow):
         self.add_attribute('steps_todo', extra_steps)
         self.add_attribute('steps_done', [])
 
-        for key, valid_type in param_types:
-            if key not in params:
-                raise InputValidationError('Missing input key {}'.format(key))
-            value = params.pop(key)
-            if not isinstance(value, valid_type):
-                raise InputValidationError(
-                    "Input parameter '{key}' is of invalid type '{type}', should be '{valid_type}'.".format(
-                        key=key, type=type(value), valid_type=valid_type
-                    )
-                )
-        if params:
-            raise InputValidationError('Unrecognized input parameters {}'.format(
-                list(params.keys())
-            ))
         self.append_to_report("Starting workflow with parameters: {}".format(self.get_parameters()))
 
     @property
