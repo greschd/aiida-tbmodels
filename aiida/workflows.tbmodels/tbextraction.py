@@ -3,6 +3,7 @@
 #
 # Author:  Dominik Gresch <greschd@gmx.ch>
 
+from aiida_tools.validate_input import validate_input, parameter
 from past.builtins import basestring
 from aiida.orm import (
     Code, Computer, DataFactory, CalculationFactory, QueryBuilder, Workflow
@@ -11,6 +12,14 @@ from aiida.common.exceptions import InputValidationError
 
 from ._validate_input import validate_input
 
+@validate_input
+@parameter('wannier_code', type=basestring)
+@parameter('wannier_data', type=DataFactory('vasp.archive'))
+@parameter('wannier_queue', type=basestring)
+@parameter('wannier_settings', type=DataFactory('parameter'))
+@parameter('tbmodels_code', type=basestring)
+@parameter('slice_idx', type=DataFactory('tbmodels.list'), required=False)
+@parameter('symmetries', type=DataFactory('singlefile'), required=False)
 class TbextractionWorkflow(Workflow):
     """
     This workflow takes a Wannier90 input and a symmetry file as input and returns the symmetrized TBmodels model.
@@ -18,40 +27,23 @@ class TbextractionWorkflow(Workflow):
     def __init__(self, **kwargs):
         super(TbextractionWorkflow, self).__init__(**kwargs)
 
+    @Workflow.step
     def validate_input(self):
-        """
-        Check if all necessary inputs are present
-        """
         params = self.get_parameters()
         self.add_attribute('has_slice', 'slice_idx' in params)
         self.add_attribute('has_symmetries', 'symmetries' in params)
 
-        SinglefileData = DataFactory('singlefile')
-        ArchiveData = DataFactory('vasp.archive')
-        ParameterData = DataFactory('parameter')
-        ListData = DataFactory('tbmodels.list')
-
-        param_types = [
-            ('wannier_code', basestring),
-            ('wannier_data', ArchiveData),
-            ('wannier_queue', basestring),
-            ('wannier_settings', ParameterData),
-            ('tbmodels_code', basestring)
-        ]
-        validate_input(params, param_types)
-
         extra_steps = ['parse']
         if self.get_attribute('has_slice'):
-            param_types += [('slice_idx', ListData)]
             extra_steps += ['slice']
         if self.get_attribute('has_symmetries'):
-            param_types += [('symmetries', SinglefileData)]
             extra_steps += ['symmetrize']
         extra_steps += ['finalize']
         self.add_attribute('steps_todo', extra_steps)
         self.add_attribute('steps_done', [])
 
         self.append_to_report("Starting workflow with parameters: {}".format(self.get_parameters()))
+        self.next(self.wannier)
 
     @property
     def previous_step(self):
@@ -96,8 +88,7 @@ class TbextractionWorkflow(Workflow):
         return calc
 
     @Workflow.step
-    def start(self):
-        self.validate_input()
+    def wannier(self):
         self.append_to_report("Running Wannier90 calculation...")
         self.attach_calculation(self.run_wswannier())
         self.next(self.get_next_step())
