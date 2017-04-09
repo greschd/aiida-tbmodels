@@ -4,35 +4,22 @@
 # Author:  Dominik Gresch <greschd@gmx.ch>
 
 from past.builtins import basestring
+from aiida_tools import validate_input, parameter
 from aiida.orm import (
     Code, Computer, DataFactory, CalculationFactory, QueryBuilder, Workflow
 )
-from ._validate_input import validate_input
 
+@validate_input
+@parameter('tb_model', DataFactory('singlefile'))
+@parameter('reference_bands', DataFactory('array.bands'))
+@parameter('bandstructure_utils_code', basestring)
+@parameter('tbmodels_code', basestring)
 class BandevaluationWorkflow(Workflow):
     """
     This workflow evaluates the difference between a reference bandstructure and the bandstructure of a given tight-binding model.
     """
     def __init__(self, **kwargs):
         super(BandevaluationWorkflow, self).__init__(**kwargs)
-
-    def validate_input(self):
-        """
-        Check if all necessary inputs are present
-        """
-        params = self.get_parameters()
-
-        BandsData = DataFactory('array.bands')
-        SinglefileData = DataFactory('singlefile')
-
-        param_types = [
-            ('tb_model', SinglefileData),
-            ('reference_bands', BandsData),
-            ('bandstructure_utils_code', basestring),
-            ('tbmodels_code', basestring)
-        ]
-        validate_input(params, param_types)
-        self.append_to_report("Starting workflow with parameters: {}".format(self.get_parameters()))
 
     def setup_calc(self, calc_string, code_param):
         calc = CalculationFactory(calc_string)()
@@ -45,7 +32,7 @@ class BandevaluationWorkflow(Workflow):
 
     @Workflow.step
     def start(self):
-        self.validate_input()
+        self.append_to_report("Starting workflow with parameters: {}".format(self.get_parameters()))
         self.next(self.eigenvals)
 
     @Workflow.step
