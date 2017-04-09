@@ -108,7 +108,7 @@ class TbextractionWorkflow(Workflow):
 
     @Workflow.step
     def parse(self):
-        wannier_calc = self.get_step_calculations(self.start)[0]
+        wannier_calc = self.get_step_calculations(self.wannier)[0]
         wannier_folder = wannier_calc.out.tb_model
         self.append_to_report("Parsing Wannier90 output to tbmodels format...")
         self.attach_calculation(self.run_parse(wannier_folder))
