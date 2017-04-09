@@ -10,8 +10,6 @@ from aiida.orm import (
 )
 from aiida.common.exceptions import InputValidationError
 
-from ._validate_input import validate_input
-
 @validate_input
 @parameter('wannier_code', type=basestring)
 @parameter('wannier_data', type=DataFactory('vasp.archive'))
