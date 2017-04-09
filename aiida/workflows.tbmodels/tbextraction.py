@@ -28,7 +28,7 @@ class TbextractionWorkflow(Workflow):
         super(TbextractionWorkflow, self).__init__(**kwargs)
 
     @Workflow.step
-    def validate_input(self):
+    def start(self):
         params = self.get_parameters()
         self.add_attribute('has_slice', 'slice_idx' in params)
         self.add_attribute('has_symmetries', 'symmetries' in params)
