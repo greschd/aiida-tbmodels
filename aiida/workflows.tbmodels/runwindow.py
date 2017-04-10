@@ -13,7 +13,7 @@ from .tbextraction import TbextractionWorkflow
 
 @validate_input
 @parameter('window', DataFactory('parameter'))
-@inherit_parameters(BandevaluationWorkflow)
+@inherit_parameters(BandevaluationWorkflow, ignore=['tb_model'])
 @inherit_parameters(TbextractionWorkflow)
 class RunwindowWorkflow(Workflow):
     """
