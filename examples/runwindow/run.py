@@ -54,6 +54,24 @@ def get_singlefile_instance(description, path):
         res = res[0][0]
     return res
 
+def get_bandsdata():
+    qb = QueryBuilder()
+    BandsData = DataFactory('array.bands')
+    description = 'Silicon bands from TB model.'
+    qb.append(
+        BandsData,
+        filters={'description': {'==': description}}
+    )
+    res = qb.all()
+    if len(res) == 0:
+        res = read_bands('reference_input/silicon_bands.hdf5')
+        res.store()
+    elif len(res) > 1:
+        raise ValueError('Query returned more than one matching SinglefileData instance.')
+    else:
+        res = res[0][0]
+    return res
+
 def run(slice=True, symmetries=True):
     params = dict()
     params['wannier_data'] = get_input_archive()
@@ -104,7 +122,7 @@ def run(slice=True, symmetries=True):
         slice_idx.store()
         params['slice_idx'] = slice_idx
 
-    params['reference_bands'] = get_singlefile_instance(u'Bands for silicon tight-binding model', 'reference_input/silicon_bands.hdf5')
+    params['reference_bands'] = get_bandsdata()
     wfobj = WorkflowFactory('tbmodels.runwindow')(params=params)
     wfobj.store()
     wfobj.start()
