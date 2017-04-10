@@ -8,7 +8,6 @@ from past.builtins import basestring
 from aiida.orm import (
     Code, Computer, DataFactory, CalculationFactory, QueryBuilder, Workflow
 )
-from aiida.common.exceptions import InputValidationError
 
 @validate_input
 @parameter('wannier_code', type=basestring)
@@ -40,7 +39,6 @@ class TbextractionWorkflow(Workflow):
         self.add_attribute('steps_todo', extra_steps)
         self.add_attribute('steps_done', [])
 
-        self.append_to_report("Starting workflow with parameters: {}".format(self.get_parameters()))
         self.next(self.wannier)
 
     @property

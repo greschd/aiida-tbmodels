@@ -32,11 +32,6 @@ class BandevaluationWorkflow(Workflow):
 
     @Workflow.step
     def start(self):
-        self.append_to_report("Starting workflow with parameters: {}".format(self.get_parameters()))
-        self.next(self.eigenvals)
-
-    @Workflow.step
-    def eigenvals(self):
         calc = self.setup_calc('tbmodels.eigenvals', 'tbmodels_code')
         calc.use_tb_model(self.get_parameter('tb_model'))
         calc.use_kpoints(self.get_parameter('reference_bands'))
