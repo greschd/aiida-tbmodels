@@ -44,7 +44,7 @@ class BandevaluationWorkflow(Workflow):
     def difference(self):
         calc = self.setup_calc('bandstructure_utils.difference', 'bandstructure_utils_code')
         calc.use_bands1(self.get_parameter('reference_bands'))
-        ev_calc = self.get_step_calculations(self.eigenvals)[0]
+        ev_calc = self.get_step_calculations(self.start)[0]
         calc.use_bands2(ev_calc.out.bands)
         calc.store_all()
         self.attach_calculation(calc)

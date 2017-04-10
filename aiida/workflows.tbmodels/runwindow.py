@@ -4,11 +4,13 @@
 # Author:  Dominik Gresch <greschd@gmx.ch>
 
 from past.builtins import basestring
+from aiida_tools.validate_input import validate_input, parameter, inherit_parameters
 from aiida.orm import (
-    Code, Computer, DataFactory, CalculationFactory, QueryBuilder, Workflow
+    Code, Computer, DataFactory, CalculationFactory, QueryBuilder, Workflow, WorkflowFactory
 )
 
-
+@inherit_parameters(WorkflowFactory('tbmodels.bandevaluation'))
+@inherit_parameters(WorkflowFactory('tbmodels.tbextraction'))
 class RunwindowWorkflow(Workflow):
     """
     This workflow takes a runs the tight-binding extraction and analysis for a given energy window.
