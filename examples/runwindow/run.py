@@ -10,6 +10,7 @@ import itertools
 
 import numpy as np
 from aiida.orm import QueryBuilder
+from aiida.tools.codespecific.bandstructure_utils.io import read_bands
 
 def get_input_archive():
     archive_description = u'InSb Wannier90 input from HF VASP calculation'
