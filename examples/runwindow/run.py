@@ -58,17 +58,17 @@ def get_singlefile_instance(description, path):
 def get_bandsdata():
     qb = QueryBuilder()
     BandsData = DataFactory('array.bands')
-    description = 'Silicon bands from TB model.'
+    description = 'InSb bands from TB model.'
     qb.append(
         BandsData,
         filters={'description': {'==': description}}
     )
     res = qb.all()
     if len(res) == 0:
-        res = read_bands('reference_input/silicon_bands.hdf5')
+        res = read_bands('reference_input/bands.hdf5')
         res.store()
     elif len(res) > 1:
-        raise ValueError('Query returned more than one matching SinglefileData instance.')
+        raise ValueError('Query returned more than one matching BandsData instance.')
     else:
         res = res[0][0]
     return res
