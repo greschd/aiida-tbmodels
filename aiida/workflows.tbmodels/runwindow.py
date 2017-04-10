@@ -33,6 +33,7 @@ class RunwindowWorkflow(Workflow):
         extraction_params['wannier_settings'] = wannier_settings_data
         wf = TbextractionWorkflow(params=extraction_params)
         wf.store()
+        wf.start()
         self.attach_workflow(wf)
         self.next(self.bandeval)
 
@@ -46,6 +47,7 @@ class RunwindowWorkflow(Workflow):
         self.add_result('tb_model', tb_model)
         wf = BandevaluationWorkflow(params=band_params)
         wf.store()
+        wf.start()
         self.attach_workflow(wf)
         self.next(self.finalize)
 
