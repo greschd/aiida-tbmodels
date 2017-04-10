@@ -62,6 +62,7 @@ def run(slice=True, symmetries=True):
     params['wannier_queue'] = 'dphys_compute'
     params['wannier_code'] = 'Wannier90_2.1.0'
     params['tbmodels_code'] = 'tbmodels_dev'
+    params['bandstructure_utils_code'] = 'bandstructure_utils_dev'
     k_values = [x if x <= 0.5 else -1 + x for x in np.linspace(0, 1, 6, endpoint=False)]
     k_points = [list(reversed(k)) for k in itertools.product(k_values, repeat=3)]
     window = DataFactory('parameter')(
@@ -104,7 +105,7 @@ def run(slice=True, symmetries=True):
         params['slice_idx'] = slice_idx
 
     params['reference_bands'] = get_singlefile_instance(u'Bands for silicon tight-binding model', 'reference_input/silicon_bands.hdf5')
-    wfobj = WorkflowFactory('tbmodels.tbextraction')(params=params)
+    wfobj = WorkflowFactory('tbmodels.runwindow')(params=params)
     wfobj.store()
     wfobj.start()
     print('Submitted workflow {}'.format(wfobj.pk))
