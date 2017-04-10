@@ -42,7 +42,7 @@ class RunwindowWorkflow(Workflow):
         extraction_wf = self.get_step_workflows(self.start)[0]
         band_params = self.inherited_parameters(BandevaluationWorkflow)
         # set the tight-binding model from the extraction
-        tb_model = extraction_wf.out.tb_model
+        tb_model = extraction_wf.get_result('tb_model')
         band_params['tb_model'] = tb_model
         self.add_result('tb_model', tb_model)
         wf = BandevaluationWorkflow(params=band_params)
@@ -54,5 +54,5 @@ class RunwindowWorkflow(Workflow):
     @Workflow.step
     def finalize(self):
         eval_wf = self.get_step_workflows(self.bandeval)[0]
-        self.add_result('difference', eval_wf.res.difference)
+        self.add_result('difference', eval_wf.get_result('difference'))
         self.next(self.exit)
