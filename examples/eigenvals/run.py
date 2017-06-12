@@ -8,7 +8,8 @@ from __future__ import division, print_function, unicode_literals
 import os
 import itertools
 
-from aiida.orm import DataFactory, Code, CalculationFactory, Computer, QueryBuilder
+from aiida.orm import DataFactory, Code, CalculationFactory, Computer
+from aiida.orm.querybuilder import QueryBuilder
 
 def get_singlefile_instance(description, path):
     qb = QueryBuilder()

@@ -6,8 +6,9 @@
 from past.builtins import basestring
 from aiida_tools.validate_input import validate_input, parameter
 from aiida.orm import (
-    Code, Computer, DataFactory, CalculationFactory, QueryBuilder, Workflow
+    Code, Computer, DataFactory, CalculationFactory, Workflow
 )
+from aiida.orm.querybuilder import QueryBuilder
 
 @validate_input
 @parameter('tb_model', DataFactory('singlefile'))
