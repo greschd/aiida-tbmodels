@@ -31,7 +31,6 @@ if __name__ == '__main__':
         reentry_register=True,
         install_requires=[
             'aiida-core',
-            'tbmodels',
         ],
         extras_require={
         },
