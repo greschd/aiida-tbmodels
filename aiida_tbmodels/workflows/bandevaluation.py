@@ -4,7 +4,7 @@
 # Author:  Dominik Gresch <greschd@gmx.ch>
 
 # from aiida.work.run import submit
-from aiida.orm.data.base import Str
+from aiida.orm.data.base import Str, Float
 from aiida.work.run import submit
 from aiida.work.workchain import WorkChain, ToContext
 from aiida.orm import Code, Computer, DataFactory, CalculationFactory
@@ -35,6 +35,7 @@ class BandEvaluation(WorkChain):
         process, inputs = self.setup_calc('tbmodels.eigenvals', 'tbmodels_code')
         inputs.tb_model = self.inputs.tb_model
         inputs.kpoints = self.inputs.reference_bands
+        print("Running TBmodels eigenvals calculation...")
         pid = submit(process, **inputs)
         return ToContext(calculated_bands=pid)
 
@@ -42,8 +43,9 @@ class BandEvaluation(WorkChain):
         process, inputs = self.setup_calc('bandstructure_utils.difference', 'bandstructure_utils_code')
         inputs.bands1 = self.inputs.reference_bands
         inputs.bands2 = self.ctx.calculated_bands.out.bands
+        print("Running difference calculation...")
         pid = submit(process, **inputs)
         return ToContext(difference=pid)
 
     def finalize(self):
-        self.out("result", self.ctx.difference.res.diff)
+        self.out("result", Float(self.ctx.difference.res.diff))

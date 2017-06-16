@@ -54,20 +54,14 @@ def get_bandsdata():
     return res
 
 def run():
-    inputs = BandEvaluation.get_inputs_template()
-
-    inputs.tbmodels_code = Str('tbmodels_dev@localhost')
-    inputs.bandstructure_utils_code = Str('bandstructure_utils_dev@localhost')
-    inputs.tb_model = get_singlefile_instance('Silicon TB model', 'input/silicon_model.hdf5')
-    inputs.reference_bands = get_bandsdata()
-
-    print(inputs)
-    pid = submit(BandEvaluation, **inputs)
-    print(pid)
-    # wfobj = WorkflowFactory('tbmodels.bandevaluation')(params=params)
-    # wfobj.store()
-    # wfobj.start()
-    # print('Submitted workflow {}'.format(wfobj.pk))
+    proc = submit(
+        BandEvaluation
+        tbmodels_code=Str('tbmodels_dev@localhost'),
+        bandstructure_utils_code=Str('bandstructure_utils_dev@localhost'),
+        tb_model=get_singlefile_instance('Silicon TB model', 'input/silicon_model.hdf5'),
+        reference_bands=get_bandsdata()
+    )
+    print('Submitted process {}'.format(proc))
 
 if __name__ == '__main__':
     run()
