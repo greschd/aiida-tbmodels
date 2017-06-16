@@ -49,8 +49,5 @@ if __name__ == '__main__':
             'aiida.parsers': [
                 'tbmodels.model = aiida_tbmodels.parsers.model:ModelParser',
             ],
-            'aiida.workflows': [
-                'tbmodels.bandevaluation = aiida_tbmodels.workflows.bandevaluation:BandevaluationWorkflow',
-            ],
         },
     )

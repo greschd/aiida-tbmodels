@@ -13,7 +13,7 @@ from aiida.orm.data.base import Str
 from aiida.work.run import submit
 from aiida.orm.querybuilder import QueryBuilder
 from aiida_bandstructure_utils.io import read_bands
-from aiida_tbmodels.workflows.bandevaluation import BandEvaluation
+from aiida_tbmodels.work.bandevaluation import BandEvaluation
 
 def get_singlefile_instance(description, path):
     qb = QueryBuilder()
@@ -55,13 +55,13 @@ def get_bandsdata():
 
 def run():
     proc = submit(
-        BandEvaluation
+        BandEvaluation,
         tbmodels_code=Str('tbmodels_dev@localhost'),
         bandstructure_utils_code=Str('bandstructure_utils_dev@localhost'),
         tb_model=get_singlefile_instance('Silicon TB model', 'input/silicon_model.hdf5'),
         reference_bands=get_bandsdata()
     )
-    print('Submitted process {}'.format(proc))
+    print('Submitted process {}'.format(proc.pid))
 
 if __name__ == '__main__':
     run()
