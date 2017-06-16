@@ -10,6 +10,7 @@ import itertools
 
 import numpy as np
 from aiida.orm.data.base import Str
+from aiida.work.run import submit
 from aiida.orm.querybuilder import QueryBuilder
 from aiida_bandstructure_utils.io import read_bands
 from aiida_tbmodels.workflows.bandevaluation import BandEvaluation
@@ -53,14 +54,16 @@ def get_bandsdata():
     return res
 
 def run():
-    params = dict()
+    inputs = BandEvaluation.get_inputs_template()
 
-    params['tbmodels_code'] = Str('tbmodels_dev@localhost')
-    params['bandstructure_utils_code'] = Str('bandstructure_utils_dev@localhost')
-    params['tb_model'] = get_singlefile_instance('Silicon TB model', 'input/silicon_model.hdf5')
-    params['reference_bands'] = get_bandsdata()
+    inputs.tbmodels_code = Str('tbmodels_dev@localhost')
+    inputs.bandstructure_utils_code = Str('bandstructure_utils_dev@localhost')
+    inputs.tb_model = get_singlefile_instance('Silicon TB model', 'input/silicon_model.hdf5')
+    inputs.reference_bands = get_bandsdata()
 
-    BandEvaluation.run(**params)
+    print(inputs)
+    pid = submit(BandEvaluation, **inputs)
+    print(pid)
     # wfobj = WorkflowFactory('tbmodels.bandevaluation')(params=params)
     # wfobj.store()
     # wfobj.start()
