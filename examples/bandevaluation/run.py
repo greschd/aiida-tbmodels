@@ -9,8 +9,8 @@ import argparse
 import itertools
 
 import numpy as np
-from aiida.orm import QueryBuilder
-from aiida.tools.codespecific.bandstructure_utils.io import read_bands
+from aiida.orm.querybuilder import QueryBuilder
+from aiida_bandstructure_utils._tools.io import read_bands
 
 def get_singlefile_instance(description, path):
     qb = QueryBuilder()
