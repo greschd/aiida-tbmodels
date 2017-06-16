@@ -6,7 +6,7 @@
 from aiida.orm import DataFactory
 from aiida.common.utils import classproperty
 from aiida.common.exceptions import InputValidationError, ValidationError
-from aiida.tools.codespecific.bandstructure_utils.io import write_kpoints
+from aiida_bandstructure_utils.io import write_kpoints
 
 from ._base import ModelInputBase
 

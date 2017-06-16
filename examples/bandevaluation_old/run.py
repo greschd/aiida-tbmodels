@@ -9,10 +9,8 @@ import argparse
 import itertools
 
 import numpy as np
-from aiida.orm.data.base import Str
 from aiida.orm.querybuilder import QueryBuilder
 from aiida_bandstructure_utils.io import read_bands
-from aiida_tbmodels.workflows.bandevaluation import BandEvaluation
 
 def get_singlefile_instance(description, path):
     qb = QueryBuilder()
@@ -55,16 +53,15 @@ def get_bandsdata():
 def run():
     params = dict()
 
-    params['tbmodels_code'] = Str('tbmodels_dev@localhost')
-    params['bandstructure_utils_code'] = Str('bandstructure_utils_dev@localhost')
+    params['tbmodels_code'] = 'tbmodels_dev'
+    params['bandstructure_utils_code'] = 'bandstructure_utils_dev'
     params['tb_model'] = get_singlefile_instance('Silicon TB model', 'input/silicon_model.hdf5')
     params['reference_bands'] = get_bandsdata()
 
-    BandEvaluation.run(**params)
-    # wfobj = WorkflowFactory('tbmodels.bandevaluation')(params=params)
-    # wfobj.store()
-    # wfobj.start()
-    # print('Submitted workflow {}'.format(wfobj.pk))
+    wfobj = WorkflowFactory('tbmodels.bandevaluation')(params=params)
+    wfobj.store()
+    wfobj.start()
+    print('Submitted workflow {}'.format(wfobj.pk))
 
 if __name__ == '__main__':
     run()
