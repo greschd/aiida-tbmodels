@@ -26,7 +26,7 @@ class BandEvaluation(WorkChain):
     def setup_calc(self, calc_string, code_param):
         process = CalculationFactory(calc_string).process()
         inputs = process.get_inputs_template()
-        inputs.code = Code.get_from_string(self.inputs[code_param].value)
+        inputs.code = self.inputs[code_param]
         inputs._options.resources = {'num_machines': 1}
         inputs._options.withmpi = False
         return process, inputs
