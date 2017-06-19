@@ -16,8 +16,8 @@ class BandEvaluation(WorkChain):
 
         spec.input('tb_model', valid_type=DataFactory('singlefile'))
         spec.input('reference_bands', valid_type=DataFactory('array.bands'))
-        spec.input('bandstructure_utils_code', valid_type=Str)
-        spec.input('tbmodels_code', valid_type=Str)
+        spec.input('bandstructure_utils_code', valid_type=Code)
+        spec.input('tbmodels_code', valid_type=Code)
 
         spec.outline(
             cls.calculate_bands, cls.calculate_difference, cls.finalize
@@ -48,4 +48,4 @@ class BandEvaluation(WorkChain):
         return ToContext(difference=pid)
 
     def finalize(self):
-        self.out("result", Float(self.ctx.difference.res.diff))
+        self.out("difference", Float(self.ctx.difference.res.diff))

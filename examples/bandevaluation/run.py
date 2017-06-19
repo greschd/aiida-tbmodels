@@ -56,8 +56,8 @@ def get_bandsdata():
 def run():
     proc = submit(
         BandEvaluation,
-        tbmodels_code=Str('tbmodels_dev@localhost'),
-        bandstructure_utils_code=Str('bandstructure_utils_dev@localhost'),
+        tbmodels_code=Code.get_from_string('tbmodels_dev@localhost'),
+        bandstructure_utils_code=Code.get_from_string('bandstructure_utils_dev@localhost'),
         tb_model=get_singlefile_instance('Silicon TB model', 'input/silicon_model.hdf5'),
         reference_bands=get_bandsdata()
     )
