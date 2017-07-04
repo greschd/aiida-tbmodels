@@ -35,6 +35,7 @@ if __name__ == '__main__':
             'aiida-bandstructure-utils'
         ],
         extras_require={
+            'test': ['pytest', 'aiida-pytest']
         },
         entry_points={
             'aiida.calculations': [
