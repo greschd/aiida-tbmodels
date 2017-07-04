@@ -15,8 +15,9 @@ class ModelParser(Parser):
     def parse_with_retrieved(self, retrieved):
         try:
             out_folder = retrieved[self._calc._get_linkname_retrieved()]
-        except KeyError:
+        except KeyError as e:
             self.logger.error("No retrieved folder found")
+            raise e
 
         model_file = out_folder.get_abs_path(self._calc._OUTPUT_FILE_NAME)
         model_node = DataFactory('singlefile')()
