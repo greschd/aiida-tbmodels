@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-def test_eigenvals(configure, sample, get_tbmodels_process_inputs):
+def test_eigenvals(configure_with_daemon, sample, get_tbmodels_process_inputs):
     from aiida.orm import DataFactory
     from aiida.work.run import run
 

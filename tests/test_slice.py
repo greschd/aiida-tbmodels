@@ -5,7 +5,7 @@ from __future__ import division, unicode_literals
 
 import numpy as np
 
-def test_slice(configure, sample, get_tbmodels_process_inputs):
+def test_slice(configure_with_daemon, sample, get_tbmodels_process_inputs):
     from aiida.orm import DataFactory
     from aiida.work.run import run
 
