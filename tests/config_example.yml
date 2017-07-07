@@ -4,7 +4,7 @@ computers:
       description: localhost
       transport: local
       scheduler: direct
-      work_directory: /tmp/test_aiida_bandstructure_utils_run
+      work_directory: /tmp/test_aiida_tbmodels_run
 
 codes:
     - label: tbmodels
