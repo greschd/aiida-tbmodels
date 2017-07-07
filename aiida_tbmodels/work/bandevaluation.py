@@ -48,4 +48,4 @@ class BandEvaluation(WorkChain):
         return ToContext(difference=pid)
 
     def finalize(self):
-        self.out("difference", Float(self.ctx.difference.res.diff))
+        self.out("difference", Float(self.ctx.difference.out.difference))
