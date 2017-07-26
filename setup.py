@@ -1,7 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-setup: usage: pip install -e .[graphs]
-"""
 
 from setuptools import setup, find_packages
 
