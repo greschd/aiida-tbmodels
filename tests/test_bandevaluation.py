@@ -10,12 +10,12 @@ def test_bandevaluation(configure_with_daemon, sample, get_tbmodels_process_inpu
     from aiida.orm.code import Code
     from aiida.work.run import run
     from aiida_tbmodels.work.bandevaluation import BandEvaluation
-    from aiida_bandstructure_utils.io import read_bands
+    from aiida_bands_inspect.io import read_bands
 
     output = run(
         BandEvaluation,
         tbmodels_code=Code.get_from_string('tbmodels'),
-        bandstructure_utils_code=Code.get_from_string('bandstructure_utils'),
+        bands_inspect_code=Code.get_from_string('bands_inspect'),
         tb_model=DataFactory('singlefile')(file=sample('silicon/model.hdf5')),
         reference_bands=read_bands(sample('silicon/bands.hdf5'))
     )

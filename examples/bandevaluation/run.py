@@ -12,7 +12,7 @@ import numpy as np
 from aiida.orm.data.base import Str
 from aiida.work.run import run, submit
 from aiida.orm.querybuilder import QueryBuilder
-from aiida_bandstructure_utils.io import read_bands
+from aiida_bands_inspect.io import read_bands
 from aiida_tbmodels.work.bandevaluation import BandEvaluation
 
 def get_singlefile_instance(description, path):
@@ -57,7 +57,7 @@ def run_bandevaluation():
     res = run(
         BandEvaluation,
         tbmodels_code=Code.get_from_string('tbmodels_dev@localhost'),
-        bandstructure_utils_code=Code.get_from_string('bandstructure_utils_dev@localhost'),
+        bands_inspect_code=Code.get_from_string('bands_inspect_dev@localhost'),
         tb_model=get_singlefile_instance('Silicon TB model', 'input/silicon_model.hdf5'),
         reference_bands=get_bandsdata()
     )

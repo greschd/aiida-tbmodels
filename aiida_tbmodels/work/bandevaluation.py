@@ -16,7 +16,7 @@ class BandEvaluation(WorkChain):
 
         spec.input('tb_model', valid_type=DataFactory('singlefile'))
         spec.input('reference_bands', valid_type=DataFactory('array.bands'))
-        spec.input('bandstructure_utils_code', valid_type=Code)
+        spec.input('bands_inspect_code', valid_type=Code)
         spec.input('tbmodels_code', valid_type=Code)
 
         spec.outline(
@@ -40,7 +40,7 @@ class BandEvaluation(WorkChain):
         return ToContext(calculated_bands=pid)
 
     def calculate_difference(self):
-        process, inputs = self.setup_calc('bandstructure_utils.difference', 'bandstructure_utils_code')
+        process, inputs = self.setup_calc('bands_inspect.difference', 'bands_inspect_code')
         inputs.bands1 = self.inputs.reference_bands
         inputs.bands2 = self.ctx.calculated_bands.out.bands
         self.report("Running difference calculation...")

@@ -32,7 +32,7 @@ if __name__ == '__main__':
         install_requires=[
             'future',
             'aiida-core',
-            'aiida-bandstructure-utils'
+            'aiida-bands-inspect'
         ],
         extras_require={
             'test': ['pytest', 'aiida-pytest']

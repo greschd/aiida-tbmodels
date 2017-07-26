@@ -6,7 +6,7 @@
 from aiida.orm import DataFactory
 from aiida.common.utils import classproperty
 from aiida.common.exceptions import InputValidationError, ValidationError
-from aiida_bandstructure_utils.io import write_kpoints
+from aiida_bands_inspect.io import write_kpoints
 
 from ._base import ModelInputBase
 
@@ -15,7 +15,7 @@ class EigenvalsCalculation(ModelInputBase):
         super(EigenvalsCalculation, self)._init_internal_params()
 
         self._OUTPUT_FILE_NAME = 'eigenvals.hdf5'
-        self._default_parser = 'bandstructure_utils.bands'
+        self._default_parser = 'bands_inspect.bands'
 
     @classproperty
     def _use_methods(cls):
