@@ -41,9 +41,6 @@ if __name__ == '__main__':
                 'tbmodels.slice = aiida_tbmodels.calculations.slice:SliceCalculation',
                 'tbmodels.symmetrize = aiida_tbmodels.calculations.symmetrize:SymmetrizeCalculation',
             ],
-            'aiida.data': [
-                'tbmodels.list = aiida_tbmodels.data.list:ListData',
-            ],
             'aiida.parsers': [
                 'tbmodels.model = aiida_tbmodels.parsers.model:ModelParser',
             ],

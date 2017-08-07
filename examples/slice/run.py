@@ -8,6 +8,7 @@ from __future__ import division, print_function, unicode_literals
 import os
 import itertools
 
+from aiida.orm.data.base import List
 from aiida.orm import DataFactory, Code, CalculationFactory, Computer
 from aiida.orm.querybuilder import QueryBuilder
 
@@ -48,10 +49,9 @@ def run_slice():
     ))
     calc.set_withmpi(False)
     calc.set_computer(Computer.get('localhost'))
-    slice_idx = DataFactory('tbmodels.list')()
-    slice_idx.value = [0, 3, 2, 1]
+    slice_idx = List()
+    slice_idx.extend([0, 3, 2, 1])
     calc.use_slice_idx(slice_idx)
-    # calc.use_slice_idx(DataFactory('tbmodels.list')([0, 3, 2, 1]))
 
     calc.store_all()
     calc.submit()

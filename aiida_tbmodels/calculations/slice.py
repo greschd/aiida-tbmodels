@@ -5,8 +5,8 @@
 import os
 import json
 
-from aiida.orm.data import Data
 from aiida.orm import DataFactory
+from aiida.orm.data.base import List
 from aiida.common.utils import classproperty
 from aiida.common.exceptions import InputValidationError, ValidationError
 
@@ -18,7 +18,7 @@ class SliceCalculation(ModelInputBase, ModelOutputBase):
         retdict = super(SliceCalculation, cls)._use_methods
         retdict.update(
             slice_idx=dict(
-                valid_types=DataFactory('tbmodels.list'),
+                valid_types=List,
                 additional_parameter=None,
                 linkname='slice_idx',
                 docstring="Indices of the orbitals which are sliced from the model."

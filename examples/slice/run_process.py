@@ -10,6 +10,7 @@ import itertools
 
 from aiida.orm.code import Code
 from aiida.orm import DataFactory, CalculationFactory
+from aiida.orm.data.base import List
 from aiida.orm.querybuilder import QueryBuilder
 from aiida.work.run import run
 
@@ -47,8 +48,8 @@ def run_slice():
     inputs._options.resources = {'num_machines': 1, 'tot_num_mpiprocs': 1}
     inputs._options.withmpi = False
 
-    slice_idx = DataFactory('tbmodels.list')()
-    slice_idx.value = [0, 3, 2, 1]
+    slice_idx = List()
+    slice_idx.extend([0, 3, 2, 1])
     inputs.slice_idx = slice_idx
 
     output = run(process, **inputs)
