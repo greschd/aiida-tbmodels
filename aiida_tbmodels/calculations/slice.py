@@ -28,7 +28,7 @@ class SliceCalculation(ModelInputBase, ModelOutputBase):
 
     def _prepare_for_submission(self, tempfolder, inputdict):
         try:
-            slice_idx = inputdict.pop(self.get_linkname('slice_idx')).value
+            slice_idx = inputdict.pop(self.get_linkname('slice_idx'))
         except KeyError:
             raise InputValidationError('No slice_idx specified for this calculation.')
 
