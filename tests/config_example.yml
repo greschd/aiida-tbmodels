@@ -17,4 +17,4 @@ codes:
       description: bands_inspect
       default_plugin: bands_inspect.difference
       remote_computer: localhost
-      remote_abspath: /home/greschd/.virtualenvs/bands_inspect/bin/bands_inspect
+      remote_abspath: /home/greschd/.virtualenvs/bands_inspect/bin/bands-inspect
