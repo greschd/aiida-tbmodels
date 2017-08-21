@@ -35,8 +35,6 @@ class BandEvaluation(WorkChain):
         process, inputs = self.setup_calc('tbmodels.eigenvals', 'tbmodels_code')
         inputs.tb_model = self.inputs.tb_model
         inputs.kpoints = self.inputs.reference_bands
-        import time
-        time.sleep(5)
         self.report("Running TBmodels eigenvals calculation...")
         pid = submit(process, **inputs)
         return ToContext(calculated_bands=pid)

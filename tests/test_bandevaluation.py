@@ -32,10 +32,20 @@ def test_bandevaluation(configure_with_daemon, bandeval_process_inputs):
 
 def test_bandevaluation_launchmany(configure_with_daemon, bandeval_process_inputs, wait_for):
     from aiida.work import submit
+    from aiida.orm import CalculationFactory
+    from aiida.orm.querybuilder import QueryBuilder
+    qb1 = QueryBuilder()
+    qb2 = QueryBuilder()
+    qb1.append(CalculationFactory('tbmodels.eigenvals'))
+    qb2.append(CalculationFactory('bands_inspect.difference'))
+
+    initial_count1 = qb1.count()
+    initial_count2 = qb2.count()
+    N = 50
 
     process, inputs = bandeval_process_inputs
     pids = []
-    for _ in range(50):
+    for _ in range(N):
         pids.append(submit(
             process,
             **inputs
@@ -43,3 +53,8 @@ def test_bandevaluation_launchmany(configure_with_daemon, bandeval_process_input
 
     for p in pids:
         wait_for(p)
+
+    end_count1 = qb1.count()
+    end_count2 = qb2.count()
+    assert end_count1 - initial_count1 == N
+    assert end_count2 - initial_count2 == N
