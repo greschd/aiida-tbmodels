@@ -41,7 +41,7 @@ def test_bandevaluation_launchmany(configure_with_daemon, bandeval_process_input
 
     initial_count1 = qb1.count()
     initial_count2 = qb2.count()
-    N = 50
+    N = 100
 
     process, inputs = bandeval_process_inputs
     pids = []
