@@ -15,13 +15,11 @@ from aiida.orm.querybuilder import QueryBuilder
 from aiida_bands_inspect.io import read_bands
 from aiida_tbmodels.work.bandevaluation import BandEvaluation
 
+
 def get_singlefile_instance(description, path):
     qb = QueryBuilder()
     SinglefileData = DataFactory('singlefile')
-    qb.append(
-        SinglefileData,
-        filters={'description': {'==': description}}
-    )
+    qb.append(SinglefileData, filters={'description': {'==': description}})
     res = qb.all()
     if len(res) == 0:
         # create archive
@@ -30,39 +28,45 @@ def get_singlefile_instance(description, path):
         res.description = description
         res.store()
     elif len(res) > 1:
-        raise ValueError('Query returned more than one matching SinglefileData instance.')
+        raise ValueError(
+            'Query returned more than one matching SinglefileData instance.'
+        )
     else:
         res = res[0][0]
     return res
+
 
 def get_bandsdata():
     qb = QueryBuilder()
     BandsData = DataFactory('array.bands')
     description = 'Silicon bands from TB model.'
-    qb.append(
-        BandsData,
-        filters={'description': {'==': description}}
-    )
+    qb.append(BandsData, filters={'description': {'==': description}})
     res = qb.all()
     if len(res) == 0:
         res = read_bands('input/silicon_bands.hdf5')
         res.store()
     elif len(res) > 1:
-        raise ValueError('Query returned more than one matching SinglefileData instance.')
+        raise ValueError(
+            'Query returned more than one matching SinglefileData instance.'
+        )
     else:
         res = res[0][0]
     return res
+
 
 def run_bandevaluation():
     res = run(
         BandEvaluation,
         tbmodels_code=Code.get_from_string('tbmodels_dev@localhost'),
         bands_inspect_code=Code.get_from_string('bands_inspect_dev@localhost'),
-        tb_model=get_singlefile_instance('Silicon TB model', 'input/silicon_model.hdf5'),
+        tb_model=get_singlefile_instance(
+            'Silicon TB model', 'input/silicon_model.hdf5'
+        ),
         reference_bands=get_bandsdata()
     )
     print('Got result {}'.format(res))
     # print('Submitted process {}'.format(proc.pid))
+
 
 if __name__ == '__main__':
     run_bandevaluation()

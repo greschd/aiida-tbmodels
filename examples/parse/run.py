@@ -12,13 +12,11 @@ from aiida.orm import Code, CalculationFactory, Computer
 from aiida.orm.querybuilder import QueryBuilder
 from aiida.orm.data.folder import FolderData
 
+
 def get_input_folder():
     folder_description = u'Bi Wannier90 output'
     qb = QueryBuilder()
-    qb.append(
-        FolderData,
-        filters={'description': {'==': folder_description}}
-    )
+    qb.append(FolderData, filters={'description': {'==': folder_description}})
     res = qb.all()
     if len(res) == 0:
         # create archive
@@ -29,20 +27,20 @@ def get_input_folder():
         res.description = folder_description
         res.store()
     elif len(res) > 1:
-        raise ValueError('Query returned more than one matching FolderData instance.')
+        raise ValueError(
+            'Query returned more than one matching FolderData instance.'
+        )
     else:
         res = res[0][0]
     return res
+
 
 def run_parse():
     code = Code.get_from_string('tbmodels_dev')
     calc = CalculationFactory('tbmodels.parse')()
     calc.use_code(code)
     # single-core on local machine
-    calc.set_resources(dict(
-        num_machines=1,
-        tot_num_mpiprocs=1
-    ))
+    calc.set_resources(dict(num_machines=1, tot_num_mpiprocs=1))
     calc.set_withmpi(False)
     calc.set_computer(Computer.get('localhost'))
     calc.use_wannier_folder(get_input_folder())

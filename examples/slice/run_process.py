@@ -14,13 +14,11 @@ from aiida.orm.data.base import List
 from aiida.orm.querybuilder import QueryBuilder
 from aiida.work.run import run
 
+
 def get_singlefile_instance(description, path):
     qb = QueryBuilder()
     SinglefileData = DataFactory('singlefile')
-    qb.append(
-        SinglefileData,
-        filters={'description': {'==': description}}
-    )
+    qb.append(SinglefileData, filters={'description': {'==': description}})
     res = qb.all()
     if len(res) == 0:
         # create archive
@@ -29,10 +27,13 @@ def get_singlefile_instance(description, path):
         res.description = description
         res.store()
     elif len(res) > 1:
-        raise ValueError('Query returned more than one matching SinglefileData instance.')
+        raise ValueError(
+            'Query returned more than one matching SinglefileData instance.'
+        )
     else:
         res = res[0][0]
     return res
+
 
 def run_slice():
     SliceCalculation = CalculationFactory('tbmodels.slice')
@@ -40,8 +41,7 @@ def run_slice():
     inputs = process.get_inputs_template()
     inputs.code = Code.get_from_string('tbmodels_dev')
     inputs.tb_model = get_singlefile_instance(
-        description='InSb TB model',
-        path='./reference_input/model.hdf5'
+        description='InSb TB model', path='./reference_input/model.hdf5'
     )
 
     # single-core on local machine
@@ -54,6 +54,7 @@ def run_slice():
 
     output = run(process, **inputs)
     print(output['tb_model'])
+
 
 if __name__ == '__main__':
     run_slice()

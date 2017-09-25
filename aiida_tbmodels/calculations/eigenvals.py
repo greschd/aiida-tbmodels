@@ -10,6 +10,7 @@ from aiida_bands_inspect.io import write_kpoints
 
 from ._base import ModelInputBase
 
+
 class EigenvalsCalculation(ModelInputBase):
     def _init_internal_params(self):
         super(EigenvalsCalculation, self)._init_internal_params()
@@ -34,7 +35,10 @@ class EigenvalsCalculation(ModelInputBase):
         kpoints_file = tempfolder.get_abs_path('kpoints.hdf5')
         write_kpoints(inputdict.pop('kpoints'), kpoints_file)
 
-        calcinfo, codeinfo = super(EigenvalsCalculation, self)._prepare_for_submission(tempfolder, inputdict)
+        calcinfo, codeinfo = super(EigenvalsCalculation,
+                                   self)._prepare_for_submission(
+                                       tempfolder, inputdict
+                                   )
         calcinfo.retrieve_list = [self._OUTPUT_FILE_NAME]
 
         codeinfo.cmdline_params = ['eigenvals', '-k', 'kpoints.hdf5']

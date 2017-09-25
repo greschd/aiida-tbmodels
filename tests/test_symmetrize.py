@@ -3,7 +3,10 @@
 
 from __future__ import division, print_function, unicode_literals
 
-def test_symmetrize(configure_with_daemon, sample, get_tbmodels_process_inputs):
+
+def test_symmetrize(
+    configure_with_daemon, sample, get_tbmodels_process_inputs
+):
     from aiida.orm import DataFactory
     from aiida.work.run import run
 

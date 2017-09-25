@@ -5,9 +5,10 @@ from __future__ import division, print_function, unicode_literals
 
 import os
 
+
 def test_parse(configure_with_daemon, sample, get_tbmodels_process_inputs):
     from aiida.orm.data.folder import FolderData
-    from aiida.orm import  DataFactory
+    from aiida.orm import DataFactory
     from aiida.work.run import run
 
     process, inputs = get_tbmodels_process_inputs('tbmodels.parse')

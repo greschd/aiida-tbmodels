@@ -12,6 +12,7 @@ from aiida.common.exceptions import InputValidationError, ValidationError
 
 from ._base import ModelInputBase, ModelOutputBase
 
+
 class SliceCalculation(ModelInputBase, ModelOutputBase):
     @classproperty
     def _use_methods(cls):
@@ -21,7 +22,8 @@ class SliceCalculation(ModelInputBase, ModelOutputBase):
                 valid_types=List,
                 additional_parameter=None,
                 linkname='slice_idx',
-                docstring="Indices of the orbitals which are sliced from the model."
+                docstring=
+                "Indices of the orbitals which are sliced from the model."
             )
         )
         return retdict
@@ -30,10 +32,16 @@ class SliceCalculation(ModelInputBase, ModelOutputBase):
         try:
             slice_idx = inputdict.pop(self.get_linkname('slice_idx'))
         except KeyError:
-            raise InputValidationError('No slice_idx specified for this calculation.')
+            raise InputValidationError(
+                'No slice_idx specified for this calculation.'
+            )
 
-        calcinfo, codeinfo = super(SliceCalculation, self)._prepare_for_submission(tempfolder, inputdict)
+        calcinfo, codeinfo = super(SliceCalculation,
+                                   self)._prepare_for_submission(
+                                       tempfolder, inputdict
+                                   )
 
-        codeinfo.cmdline_params = ['slice', '-o', self._OUTPUT_FILE_NAME] + [str(x) for x in slice_idx]
+        codeinfo.cmdline_params = ['slice', '-o', self._OUTPUT_FILE_NAME
+                                   ] + [str(x) for x in slice_idx]
 
         return calcinfo

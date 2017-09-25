@@ -8,10 +8,12 @@ from aiida.orm import DataFactory
 from aiida.parsers.parser import Parser
 from aiida.orm.data.singlefile import SinglefileData
 
+
 class ModelParser(Parser):
     """
     Parse TBmodels output to a SinglefileData containing the model file.
     """
+
     def parse_with_retrieved(self, retrieved):
         try:
             out_folder = retrieved[self._calc._get_linkname_retrieved()]

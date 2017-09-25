@@ -11,6 +11,7 @@ from aiida.common.exceptions import InputValidationError, ValidationError
 
 from ._base import ModelInputBase, ModelOutputBase
 
+
 class SymmetrizeCalculation(ModelInputBase, ModelOutputBase):
     @classproperty
     def _use_methods(cls):
@@ -29,9 +30,14 @@ class SymmetrizeCalculation(ModelInputBase, ModelOutputBase):
         try:
             symmetries_file = inputdict.pop(self.get_linkname('symmetries'))
         except KeyError:
-            raise InputValidationError("No symmetries specified for this calculation.")
+            raise InputValidationError(
+                "No symmetries specified for this calculation."
+            )
 
-        calcinfo, codeinfo = super(SymmetrizeCalculation, self)._prepare_for_submission(tempfolder, inputdict)
+        calcinfo, codeinfo = super(SymmetrizeCalculation,
+                                   self)._prepare_for_submission(
+                                       tempfolder, inputdict
+                                   )
 
         # add symmetries to the files to be copied
         calcinfo.local_copy_list += [
