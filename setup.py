@@ -30,7 +30,7 @@ if __name__ == '__main__':
         reentry_register=True,
         install_requires=['future', 'aiida-core', 'aiida-bands-inspect'],
         extras_require={
-            'dev': ['pytest', 'aiida-pytest', 'yapf', 'pre-commit']
+            'dev': ['pytest', 'aiida-pytest', 'yapf==0.20', 'pre-commit']
         },
         entry_points={
             'aiida.calculations': [

@@ -1,0 +1,35 @@
+language: python
+python: 2.7
+cache: pip
+sudo: true
+services:
+  - postgresql
+addons:
+  apt:
+    packages:
+      - python3
+      - python3-tk
+      - python3-pip
+      - python3-numpy
+      - python3-scipy
+      - python3-h5py
+      - python3-matplotlib
+  postgresql: "9.5"
+before_install:  # copied from pgtest's travis.yml
+  - sudo apt-get install locate
+  - sudo service postgresql stop
+  - sudo apt-get remove postgresql
+  - sudo apt-get install postgresql
+  - sudo updatedb
+  - sudo pip3 install -U setuptools
+  - sudo pip3 install tbmodels
+  - sudo pip3 install git+https://github.com/Z2PackDev/bands_inspect.git#egg=bands-inspect
+install:
+  - pip install -e git+https://github.com/aiidateam/aiida_core.git#egg=aiida_core
+  - pip install -e git+https://github.com/greschd/aiida_pytest#egg=aiida_pytest
+  - pip install -e .[dev]
+env:
+  - TEST_TYPE="pre-commit"
+  - TEST_TYPE="tests"
+script:
+  - ./.travis-data/test_script.sh
