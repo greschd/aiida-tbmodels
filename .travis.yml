@@ -23,8 +23,8 @@ before_install:  # copied from pgtest's travis.yml
   - sudo updatedb
   - sudo pip3 install -U setuptools
   - sudo pip3 install -U pip
-  - sudo pip3 install git+https://github.com/Z2PackDev/TBmodels.git@dev#egg=tbmodels
   - sudo pip3 install git+https://github.com/Z2PackDev/bands_inspect.git#egg=bands-inspect
+  - sudo pip3 install git+https://github.com/Z2PackDev/TBmodels.git@dev#egg=tbmodels
 install:
   - pip install git+https://github.com/aiidateam/aiida_core.git#egg=aiida_core
   - pip install git+https://github.com/greschd/aiida_pytest#egg=aiida_pytest
