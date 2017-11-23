@@ -21,7 +21,8 @@ before_install:  # copied from pgtest's travis.yml
   - sudo apt-get remove postgresql
   - sudo apt-get install postgresql
   - sudo updatedb
-  - sudo pip3 install -U setuptools, pip
+  - sudo pip3 install -U setuptools
+  - sudo pip3 install -U pip
   - sudo pip3 install git+https://github.com/Z2PackDev/TBmodels.git@dev#egg=tbmodels
   - sudo pip3 install git+https://github.com/Z2PackDev/bands_inspect.git#egg=bands-inspect
 install:
