@@ -25,9 +25,10 @@ before_install:  # copied from pgtest's travis.yml
   - sudo pip3 install tbmodels
   - sudo pip3 install git+https://github.com/Z2PackDev/bands_inspect.git#egg=bands-inspect
 install:
-  - pip install -e git+https://github.com/aiidateam/aiida_core.git#egg=aiida_core
-  - pip install -e git+https://github.com/greschd/aiida_pytest#egg=aiida_pytest
-  - pip install -e .[dev]
+  - pip install git+https://github.com/aiidateam/aiida_core.git#egg=aiida_core
+  - pip install git+https://github.com/greschd/aiida_pytest#egg=aiida_pytest
+  - pip install git+https://github.com/greschd/aiida-bands-inspect.git#egg=aiida-bands-inspect
+  - pip install .[dev]
 env:
   - TEST_TYPE="pre-commit"
   - TEST_TYPE="tests"
