@@ -24,6 +24,12 @@ class ParseCalculation(ModelOutputBase):
                     linkname='wannier_folder',
                     docstring=
                     "Folder containing the Wannier90 output data, with prefix 'wannier90'."
+                ),
+                pos_kind=dict(
+                    valid_types=Str,
+                    additional_parameter=None,
+                    linkname='pos_kind',
+                    docstring='Determines how the orbital positions are parsed.'
                 )
             )
         )
@@ -36,6 +42,10 @@ class ParseCalculation(ModelOutputBase):
             raise InputValidationError(
                 'No wannier_folder specified for this calculation'
             )
+        try:
+            pos_kind = inputdict.pop(self.get_linkname('pos_kind')).value
+        except KeyError:
+            pos_kind = 'wannier'
 
         # get the prefix from the *_hr.dat file
         for filename in wannier_folder.get_folder_list():
@@ -59,7 +69,8 @@ class ParseCalculation(ModelOutputBase):
             for filename in wannier_folder.get_folder_list()
         ]
         codeinfo.cmdline_params = [
-            'parse', '-p', prefix, '-o', self._OUTPUT_FILE_NAME
+            'parse', '-p', prefix, '-o', self._OUTPUT_FILE_NAME, '--pos-kind',
+            pos_kind
         ]
 
         return calcinfo
