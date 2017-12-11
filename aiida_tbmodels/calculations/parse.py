@@ -5,6 +5,7 @@
 import os
 import json
 
+from aiida.orm.data.base import Str
 from aiida.orm.data.folder import FolderData
 from aiida.common.utils import classproperty
 from aiida.common.exceptions import InputValidationError, ValidationError
