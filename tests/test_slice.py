@@ -6,21 +6,21 @@ from __future__ import division, unicode_literals
 import numpy as np
 
 
-def test_slice(configure_with_daemon, sample, get_tbmodels_process_inputs):
+def test_slice(configure_with_daemon, sample, get_tbmodels_process_builder):
     from aiida.orm import DataFactory
     from aiida.orm.data.base import List
     from aiida.work.run import run
 
-    process, inputs = get_tbmodels_process_inputs('tbmodels.slice')
+    builder = get_tbmodels_process_builder('tbmodels.slice')
 
     SinglefileData = DataFactory('singlefile')
     input_model = SinglefileData()
     input_model.add_path(sample('model.hdf5'))
-    inputs.tb_model = input_model
+    builder.tb_model = input_model
 
     slice_idx = List()
     slice_idx.extend([0, 3, 2, 1])
-    inputs.slice_idx = slice_idx
+    builder.slice_idx = slice_idx
 
-    output = run(process, **inputs)
+    output = run(builder)
     assert isinstance(output['tb_model'], SinglefileData)
