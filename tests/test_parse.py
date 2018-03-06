@@ -9,7 +9,7 @@ import os
 def test_parse(configure_with_daemon, sample, get_tbmodels_process_builder):
     from aiida.orm.data.folder import FolderData
     from aiida.orm import DataFactory, load_node
-    from aiida.work.run import run
+    from aiida.work.run import run_get_pid
 
     builder = get_tbmodels_process_builder('tbmodels.parse')
 
@@ -19,9 +19,9 @@ def test_parse(configure_with_daemon, sample, get_tbmodels_process_builder):
         input_folder.add_path(os.path.join(input_path, fn), fn)
     builder.wannier_folder = input_folder
 
-    output = run(builder)
+    output, pid = run_get_pid(builder)
 
     assert isinstance(output['tb_model'], DataFactory('singlefile'))
     # ugly workaround for getting the calc
-    calc = output['tb_model'].get_inputs_dict()['tb_model']
+    calc = load_node(pid)
     assert calc.get_hash() == calc.get_extra('_aiida_hash')
