@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-#
-# Author:  Dominik Gresch <greschd@gmx.ch>
 
 import os
 import json
@@ -14,6 +12,10 @@ from ._base import ModelOutputBase
 
 
 class ParseCalculation(ModelOutputBase):
+    """
+    Calculation plugin for the 'tbmodels parse' command, which creates a TBmodels tight-binding model from the Wannier90 output.
+    """
+
     @classproperty
     def _use_methods(cls):
         retdict = super(ParseCalculation, cls)._use_methods

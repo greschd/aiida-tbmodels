@@ -1,7 +1,4 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
-#
-# Author:  Dominik Gresch <greschd@gmx.ch>
 
 from aiida.orm import DataFactory
 from aiida.common.utils import classproperty
@@ -12,6 +9,10 @@ from ._base import ModelInputBase
 
 
 class EigenvalsCalculation(ModelInputBase):
+    """
+    Calculation class for the 'tbmodels eigenvals' command, which computes the eigenvalues from a given tight-binding model.
+    """
+
     def _init_internal_params(self):
         super(EigenvalsCalculation, self)._init_internal_params()
 

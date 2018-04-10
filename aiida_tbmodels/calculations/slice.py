@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-#
-# Author:  Dominik Gresch <greschd@gmx.ch>
 
 import os
 import json
@@ -14,6 +12,10 @@ from ._base import ModelInputBase, ModelOutputBase
 
 
 class SliceCalculation(ModelInputBase, ModelOutputBase):
+    """
+    Calculation plugin for the 'tbmodels slice' command, which re-orders or slices orbitals of a tight-binding model.
+    """
+
     @classproperty
     def _use_methods(cls):
         retdict = super(SliceCalculation, cls)._use_methods

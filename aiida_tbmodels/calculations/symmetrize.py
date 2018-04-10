@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-#
-# Author:  Dominik Gresch <greschd@gmx.ch>
 
 import os
 import json
@@ -13,6 +11,10 @@ from ._base import ModelInputBase, ModelOutputBase
 
 
 class SymmetrizeCalculation(ModelInputBase, ModelOutputBase):
+    """
+    Calculation class for the 'tbmodels symmetrize' command, which creates a symmetrized tight-binding model from a tight-binding model and symmetry representations.
+    """
+
     @classproperty
     def _use_methods(cls):
         retdict = super(SymmetrizeCalculation, cls)._use_methods
