@@ -5,11 +5,12 @@ from __future__ import division, print_function, unicode_literals
 
 import os
 
+import pytest
 
-def test_parse(configure_with_daemon, sample, get_tbmodels_process_builder):
+
+@pytest.fixture
+def get_tbmodels_parse_builder(sample, get_tbmodels_process_builder):
     from aiida.orm.data.folder import FolderData
-    from aiida.orm import DataFactory, load_node
-    from aiida.work.launch import run_get_node
 
     builder = get_tbmodels_process_builder('tbmodels.parse')
 
@@ -19,7 +20,33 @@ def test_parse(configure_with_daemon, sample, get_tbmodels_process_builder):
         input_folder.add_path(os.path.join(input_path, fn), fn)
     builder.wannier_folder = input_folder
 
+    return builder
+
+
+def test_parse(configure, assert_finished, get_tbmodels_parse_builder):
+    from aiida.orm.data.singlefile import SinglefileData
+    from aiida.work.launch import run_get_node
+
+    builder = get_tbmodels_parse_builder
     output, calc = run_get_node(builder)
 
-    assert isinstance(output['tb_model'], DataFactory('singlefile'))
+    assert_finished(calc.pk)
+    assert isinstance(output['tb_model'], SinglefileData)
+    assert calc.get_hash() == calc.get_extra('_aiida_hash')
+
+
+def test_parse_submit(
+    configure_with_daemon, assert_finished, wait_for,
+    get_tbmodels_parse_builder
+):
+    from aiida.orm.data.singlefile import SinglefileData
+    from aiida.work.launch import submit
+
+    builder = get_tbmodels_parse_builder
+    calc = submit(builder._process_class, **builder._todict())
+    wait_for(calc.pk)
+    assert_finished(calc.pk)
+    output = calc.get_outputs_dict()
+
+    assert isinstance(output['tb_model'], SinglefileData)
     assert calc.get_hash() == calc.get_extra('_aiida_hash')
