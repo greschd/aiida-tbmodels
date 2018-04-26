@@ -43,7 +43,7 @@ def test_parse_submit(
     from aiida.work.launch import submit
 
     builder = get_tbmodels_parse_builder
-    calc = submit(builder._process_class, **builder._todict())
+    calc = submit(builder)
     wait_for(calc.pk)
     assert_finished(calc.pk)
     output = calc.get_outputs_dict()
