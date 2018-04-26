@@ -34,7 +34,7 @@ def get_singlefile_instance(description, path):
 
 
 def run_slice():
-    code = Code.get_from_string('tbmodels_dev')
+    code = Code.get_from_string('tbmodels')
     calc = CalculationFactory('tbmodels.slice')()
     calc.use_code(code)
 

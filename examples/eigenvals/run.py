@@ -1,15 +1,15 @@
 #!/usr/bin/env runaiida
 # -*- coding: utf-8 -*-
-#
-# Author:  Dominik Gresch <greschd@gmx.ch>
 
 from __future__ import division, print_function, unicode_literals
 
 import os
-import itertools
 
-from aiida.orm import DataFactory, Code, CalculationFactory, Computer
+from aiida.orm import DataFactory, Code
 from aiida.orm.querybuilder import QueryBuilder
+from aiida.work.launch import run_get_pid
+
+from aiida_tbmodels.calculations.eigenvals import EigenvalsCalculation
 
 
 def get_singlefile_instance(description, path):
@@ -33,28 +33,24 @@ def get_singlefile_instance(description, path):
 
 
 def run_eigenvals():
-    code = Code.get_from_string('tbmodels_dev')
-    calc = CalculationFactory('tbmodels.eigenvals')()
-    calc.use_code(code)
+    builder = EigenvalsCalculation.get_builder()
+    builder.code = Code.get_from_string('tbmodels')
 
-    calc.use_tb_model(
-        get_singlefile_instance(
-            description=u'InSb TB model', path='./reference_input/model.hdf5'
-        )
+    builder.tb_model = get_singlefile_instance(
+        description=u'InSb TB model', path='./reference_input/model.hdf5'
     )
 
     # single-core on local machine
-    calc.set_resources(dict(num_machines=1, tot_num_mpiprocs=1))
-    calc.set_withmpi(False)
-    calc.set_computer(Computer.get('localhost'))
+    builder.options = dict(
+        resources=dict(num_machines=1, tot_num_mpiprocs=1), withmpi=False
+    )
 
-    k_mesh = DataFactory('array.kpoints')()
-    k_mesh.set_kpoints_mesh([4, 4, 4], offset=[0, 0, 0])
-    calc.use_kpoints(k_mesh)
+    builder.kpoints = DataFactory('array.kpoints')()
+    builder.kpoints.set_kpoints_mesh([4, 4, 4], offset=[0, 0, 0])
 
-    calc.store_all()
-    calc.submit()
-    print('Submitted calculation', calc.pk)
+    result, pid = run_get_pid(builder)
+    print('\nRan calculation with PID', pid)
+    print('Result:\n', result)
 
 
 if __name__ == '__main__':

@@ -33,7 +33,7 @@ def get_singlefile_instance(description, path):
 
 
 def run_symmetrize():
-    code = Code.get_from_string('tbmodels_dev')
+    code = Code.get_from_string('tbmodels')
     calc = CalculationFactory('tbmodels.symmetrize')()
     calc.use_code(code)
     # single-core on local machine

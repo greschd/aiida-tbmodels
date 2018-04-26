@@ -39,7 +39,7 @@ def run_slice():
     SliceCalculation = CalculationFactory('tbmodels.slice')
     process = SliceCalculation.process()
     inputs = process.get_inputs_template()
-    inputs.code = Code.get_from_string('tbmodels_dev')
+    inputs.code = Code.get_from_string('tbmodels')
     inputs.tb_model = get_singlefile_instance(
         description='InSb TB model', path='./reference_input/model.hdf5'
     )

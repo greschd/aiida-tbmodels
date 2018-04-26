@@ -1,14 +1,12 @@
 #!/usr/bin/env runaiida
 # -*- coding: utf-8 -*-
-#
-# Author:  Dominik Gresch <greschd@gmx.ch>
 
 from __future__ import division, print_function, unicode_literals
 
 import os
 import itertools
 
-from aiida.orm import Code, CalculationFactory, Computer
+from aiida.orm import Code
 from aiida.orm.querybuilder import QueryBuilder
 from aiida.orm.data.folder import FolderData
 
@@ -36,7 +34,7 @@ def get_input_folder():
 
 
 def run_parse():
-    code = Code.get_from_string('tbmodels_dev')
+    code = Code.get_from_string('tbmodels')
     calc = CalculationFactory('tbmodels.parse')()
     calc.use_code(code)
     # single-core on local machine
