@@ -1,7 +1,7 @@
 #!/usr/bin/env runaiida
 # -*- coding: utf-8 -*-
 """
-Runs a 'tbmodels slice' calculation.
+Runs a 'tbmodels symmetrize' calculation.
 """
 
 from __future__ import division, print_function, unicode_literals
@@ -9,12 +9,11 @@ from __future__ import division, print_function, unicode_literals
 import os
 
 from aiida.orm import Code
-from aiida.orm.data.base import List
-from aiida.orm.data.singlefile import SinglefileData
 from aiida.orm.querybuilder import QueryBuilder
+from aiida.orm.data.singlefile import SinglefileData
 from aiida.work.launch import run_get_pid
 
-from aiida_tbmodels.calculations.slice import SliceCalculation
+from aiida_tbmodels.calculations.symmetrize import SymmetrizeCalculation
 
 
 def get_singlefile_instance(description, path):
@@ -43,28 +42,33 @@ def get_singlefile_instance(description, path):
     return res
 
 
-def run_slice():
+def run_symmetrize():
     """
-    Creates and runs the slice calculation.
+    Creates and runs the symmetrize calculation.
     """
-    builder = SliceCalculation.get_builder()
-    builder.code = Code.get_from_string('tbmodels')
+    builder = SymmetrizeCalculation.get_builder()
 
-    builder.tb_model = get_singlefile_instance(
-        description=u'InSb TB model', path='./reference_input/model.hdf5'
-    )
+    builder.code = Code.get_from_string('tbmodels')
 
     # single-core on local machine
     builder.options = dict(
         resources=dict(num_machines=1, tot_num_mpiprocs=1), withmpi=False
     )
 
-    builder.slice_idx = List(list=[0, 3, 2, 1])
+    builder.tb_model = get_singlefile_instance(
+        description=u'InAs unsymmetrized TB model',
+        path='./reference_input/model_nosym.hdf5'
+    )
+
+    builder.symmetries = get_singlefile_instance(
+        description=u'InAs symmetries',
+        path='./reference_input/symmetries.hdf5'
+    )
 
     result, pid = run_get_pid(builder)
     print('\nRan calculation with PID', pid)
-    print('Result:\n', result)
+    print('Result:', result)
 
 
 if __name__ == '__main__':
-    run_slice()
+    run_symmetrize()

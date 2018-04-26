@@ -10,4 +10,4 @@ repos:
   hooks:
   - id: prospector
     language: system
-    exclude: '^(doc/)|(examples/)|(futures/)'
+    exclude: '^(doc/)|(futures/)'

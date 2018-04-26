@@ -1,5 +1,8 @@
 #!/usr/bin/env runaiida
 # -*- coding: utf-8 -*-
+"""
+Runs a 'tbmodels eigenvals' calculation.
+"""
 
 from __future__ import division, print_function, unicode_literals
 
@@ -7,16 +10,23 @@ import os
 
 from aiida.orm import DataFactory, Code
 from aiida.orm.querybuilder import QueryBuilder
+from aiida.orm.data.singlefile import SinglefileData
 from aiida.work.launch import run_get_pid
 
 from aiida_tbmodels.calculations.eigenvals import EigenvalsCalculation
 
 
 def get_singlefile_instance(description, path):
-    qb = QueryBuilder()
-    SinglefileData = DataFactory('singlefile')
-    qb.append(SinglefileData, filters={'description': {'==': description}})
-    res = qb.all()
+    """
+    Retrieve an instance of SinglefileData with the given description, loading it from ``path`` if it does not exist.
+    """
+    query_builder = QueryBuilder()
+    query_builder.append(
+        SinglefileData, filters={'description': {
+            '==': description
+        }}
+    )
+    res = query_builder.all()
     if len(res) == 0:
         # create archive
         res = SinglefileData()
@@ -33,6 +43,9 @@ def get_singlefile_instance(description, path):
 
 
 def run_eigenvals():
+    """
+    Creates and runs the eigenvals calculation.
+    """
     builder = EigenvalsCalculation.get_builder()
     builder.code = Code.get_from_string('tbmodels')
 
@@ -50,7 +63,7 @@ def run_eigenvals():
 
     result, pid = run_get_pid(builder)
     print('\nRan calculation with PID', pid)
-    print('Result:\n', result)
+    print('Result:', result)
 
 
 if __name__ == '__main__':
