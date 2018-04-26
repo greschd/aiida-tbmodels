@@ -1,20 +1,15 @@
 aiida-tbmodels
---------------
+==============
 
-.. container:: section
+``aiida-tbmodels`` is a plugin for the AiiDA framework to run calculations with the `TBmodels <http://z2pack.ethz.ch/tbmodels>`_ code.
 
-    aiida-tbmodels is a plugin for the AiiDA framework to run calculations with the `TBmodels <http://z2pack.ethz.ch/tbmodels>`_ code.
+.. toctree::
+    :maxdepth: 2
+    :caption: Contents:
 
-|
-
-.. rubric:: Parts of the documentation
-
-| :ref:`tutorial`
-| start here
-|
-| :ref:`reference`
-| detailed description of the classes and functions
-|
+    installation
+    examples/index
+    reference
 
 .. rubric:: Getting in touch
 
@@ -24,20 +19,13 @@ Post an issue there or contact `me`__ directly with questions / suggestions
 
 __ dg_
 
-.. rubric:: Indices and tables
+Indices and tables
+==================
 
-| :ref:`genindex`
-| list of all functions and classes
-|
-| :ref:`modindex`
-| list of all modules and submodules
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
 
-.. toctree::
-    :maxdepth: 2
-    :hidden:
-
-    tutorial.rst
-    reference.rst
 
 .. _dg: http://github.com/greschd
 .. _GitHub: http://github.com/greschd/aiida-tbmodels

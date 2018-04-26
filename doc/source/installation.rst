@@ -1,13 +1,7 @@
-.. _tutorial:
-
-Tutorial
-=========
-
-.. contents::
-    :local:
+.. _installation:
 
 Installation
-------------
+============
 
 You can install ``aiida-tbmodels`` with
 
@@ -18,8 +12,3 @@ You can install ``aiida-tbmodels`` with
 where ``python`` is the interpreter for which you installed AiiDA.
 
 To run TBmodels calculations, you will also have to set up the ``tbmodels`` CLI as an AiiDA code. After installing TBmodels, you can run ``which tbmodels`` to find the full path of the executable. Make sure to put ``unset PYTHONPATH`` into the prepend text of the code, since the ``PYTHONPATH`` set by AiiDA might interfere with your TBmodels installation.
-
-Running a Calculation
----------------------
-
-TODO
