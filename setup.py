@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+"""
+Usage: pip install .[dev]
+"""
 
 import re
 from setuptools import setup, find_packages
@@ -15,6 +18,7 @@ if __name__ == '__main__':
         description='AiiDA Plugin for running TBmodels',
         author='Dominik Gresch',
         author_email='greschd@gmx.ch',
+        url='http://z2pack.ethz.ch/aiida-plugins/aiida-tbmodels',
         license='MIT',
         classifiers=[
             'Development Status :: 3 - Alpha', 'Environment :: Plugins',
