@@ -21,7 +21,9 @@ addons:
 before_install:
   - sudo pip3 install -U setuptools
   - sudo pip3 install git+https://github.com/Z2PackDev/bands_inspect.git#egg=bands-inspect
+  - which bands-inspect
   - sudo pip3 install git+https://github.com/Z2PackDev/TBmodels.git@dev#egg=tbmodels
+  - which tbmodels
 install:
   - pip install -U pip wheel setuptools
   - pip install git+https://github.com/aiidateam/aiida_core.git#egg=aiida_core
