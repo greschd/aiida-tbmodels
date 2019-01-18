@@ -1,11 +1,14 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+# © 2017-2019, ETH Zurich, Institut für Theoretische Physik
+# Author: Dominik Gresch <greschd@gmx.ch>
 """
 Usage: python configure.py config_input_file config_output_file
 """
 
 import sys
 import subprocess
-from os.path import join
 
 
 def get_path(codename):
@@ -14,12 +17,12 @@ def get_path(codename):
     ).decode().strip()
 
 
-tbmodels_path = get_path('tbmodels')
-bands_inspect_path = get_path('bands-inspect')
+TBMODELS_PATH = get_path('tbmodels')
+BANDS_INSPECT_PATH = get_path('bands-inspect')
 
 with open(sys.argv[1], 'r') as f:
-    res = f.read().format(
-        tbmodels_path=tbmodels_path, bands_inspect_path=bands_inspect_path
+    RES = f.read().format(
+        tbmodels_path=TBMODELS_PATH, bands_inspect_path=BANDS_INSPECT_PATH
     )
 with open(sys.argv[2], 'w') as f:
-    f.write(res)
+    f.write(RES)

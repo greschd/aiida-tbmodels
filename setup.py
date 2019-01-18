@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+
+# © 2017-2019, ETH Zurich, Institut für Theoretische Physik
+# Author: Dominik Gresch <greschd@gmx.ch>
 """
 Usage: pip install .[dev]
 """
@@ -34,7 +37,10 @@ if __name__ == '__main__':
         reentry_register=True,
         install_requires=['future', 'aiida-core', 'aiida-bands-inspect'],
         extras_require={
-            'dev': ['pytest', 'aiida-pytest', 'yapf==0.21', 'pre-commit']
+            'dev': [
+                'pytest', 'aiida-pytest', 'yapf==0.25', 'pre-commit',
+                'prospector==0.12.11'
+            ]
         },
         entry_points={
             'aiida.calculations': [
