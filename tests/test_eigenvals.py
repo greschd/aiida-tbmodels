@@ -3,11 +3,19 @@
 
 # © 2017-2019, ETH Zurich, Institut für Theoretische Physik
 # Author: Dominik Gresch <greschd@gmx.ch>
+"""
+Tests for the tbmodels.eigenvals calculation.
+"""
 
 
 def test_eigenvals(
-    configure_with_daemon, sample, get_tbmodels_process_builder
+    configure_with_daemon,  # pylint: disable=unused-argument
+    sample,
+    get_tbmodels_process_builder
 ):
+    """
+    Test that the eigenvals calculation creates a bands output.
+    """
     from aiida.orm import DataFactory
     from aiida.work.run import run
 

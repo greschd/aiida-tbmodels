@@ -2,13 +2,13 @@
 
 # © 2017-2019, ETH Zurich, Institut für Theoretische Physik
 # Author: Dominik Gresch <greschd@gmx.ch>
-
-import os
-import json
+"""
+Defines the tbmodels.symmetrize calculation.
+"""
 
 from aiida.orm.data.singlefile import SinglefileData
 from aiida.common.utils import classproperty
-from aiida.common.exceptions import InputValidationError, ValidationError
+from aiida.common.exceptions import InputValidationError
 
 from ._base import ModelInputBase, ModelOutputBase
 
@@ -19,9 +19,9 @@ class SymmetrizeCalculation(ModelInputBase, ModelOutputBase):
     """
 
     @classproperty
-    def _use_methods(cls):
+    def _use_methods(cls):  # pylint: disable=no-self-argument
         retdict = super(SymmetrizeCalculation, cls)._use_methods
-        retdict.update(
+        retdict.update(  # pylint: disable=no-member
             symmetries=dict(
                 valid_types=SinglefileData,
                 additional_parameter=None,

@@ -2,10 +2,12 @@
 
 # © 2017-2019, ETH Zurich, Institut für Theoretische Physik
 # Author: Dominik Gresch <greschd@gmx.ch>
+"""
+Defines the tbmodels.eigenvals calculation.
+"""
 
 from aiida.orm import DataFactory
 from aiida.common.utils import classproperty
-from aiida.common.exceptions import InputValidationError, ValidationError
 from aiida_bands_inspect.io import write_kpoints
 
 from ._base import ModelInputBase
@@ -23,9 +25,9 @@ class EigenvalsCalculation(ModelInputBase):
         self._default_parser = 'bands_inspect.bands'
 
     @classproperty
-    def _use_methods(cls):
+    def _use_methods(cls):  # pylint: disable=no-self-argument
         retdict = super(EigenvalsCalculation, cls)._use_methods
-        retdict.update(
+        retdict.update(  # pylint: disable=no-member
             kpoints=dict(
                 valid_types=DataFactory('array.kpoints'),
                 additional_parameter=None,

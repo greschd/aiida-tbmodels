@@ -3,6 +3,9 @@
 
 # © 2017-2019, ETH Zurich, Institut für Theoretische Physik
 # Author: Dominik Gresch <greschd@gmx.ch>
+"""
+Tests for the tbmodels.parse calculation.
+"""
 
 from __future__ import division, print_function, unicode_literals
 
@@ -13,20 +16,31 @@ import pytest
 
 @pytest.fixture
 def get_tbmodels_parse_builder(sample, get_tbmodels_process_builder):
+    """
+    Fixture which creates a builder for the tbmodels.parse
+    calculation.
+    """
     from aiida.orm.data.folder import FolderData
 
     builder = get_tbmodels_process_builder('tbmodels.parse')
 
     input_path = sample('bi_wannier_output')
     input_folder = FolderData()
-    for fn in os.listdir(input_path):
-        input_folder.add_path(os.path.join(input_path, fn), fn)
+    for filename in os.listdir(input_path):
+        input_folder.add_path(os.path.join(input_path, filename), filename)
     builder.wannier_folder = input_folder
 
     return builder
 
 
-def test_parse(configure, assert_finished, get_tbmodels_parse_builder):
+def test_parse(
+    configure,  # pylint: disable=unused-argument
+    assert_finished,
+    get_tbmodels_parse_builder  # pylint: disable=redefined-outer-name
+):
+    """
+    Test the parse calculation when launched with 'run_get_node'.
+    """
     from aiida.orm.data.singlefile import SinglefileData
     from aiida.work.launch import run_get_node
 
@@ -39,9 +53,14 @@ def test_parse(configure, assert_finished, get_tbmodels_parse_builder):
 
 
 def test_parse_submit(
-    configure_with_daemon, assert_finished, wait_for,
-    get_tbmodels_parse_builder
+    configure_with_daemon,  # pylint: disable=unused-argument
+    assert_finished,
+    wait_for,
+    get_tbmodels_parse_builder  # pylint: disable=redefined-outer-name
 ):
+    """
+    Test the parse calculation when submitted to the daemon.
+    """
     from aiida.orm.data.singlefile import SinglefileData
     from aiida.work.launch import submit
 

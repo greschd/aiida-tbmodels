@@ -2,9 +2,11 @@
 
 # © 2017-2019, ETH Zurich, Institut für Theoretische Physik
 # Author: Dominik Gresch <greschd@gmx.ch>
+"""
+Defines the base classes for tbmodels calculations.
+"""
 
-"""
-"""
+# pylint: disable=abstract-method
 
 from aiida.orm import JobCalculation
 from aiida.common.utils import classproperty
@@ -14,6 +16,10 @@ from aiida.common.datastructures import CalcInfo, CodeInfo
 
 
 class TbmodelsBase(JobCalculation):
+    """
+    General base class for calculations which run the tbmodels code.
+    """
+
     def _prepare_for_submission(self, tempfolder, inputdict):
         try:
             code = inputdict.pop(self.get_linkname('code'))
@@ -39,6 +45,10 @@ class TbmodelsBase(JobCalculation):
 
 
 class ModelOutputBase(TbmodelsBase):
+    """
+    Base class for calculations which have a model (in HDF5 form) as output.
+    """
+
     def _init_internal_params(self):
         super(ModelOutputBase, self)._init_internal_params()
 
@@ -55,10 +65,14 @@ class ModelOutputBase(TbmodelsBase):
 
 
 class ModelInputBase(TbmodelsBase):
+    """
+    Base class for calculations which take a model (in HDF5 form) as input.
+    """
+
     @classproperty
-    def _use_methods(cls):
+    def _use_methods(cls):  # pylint: disable=no-self-argument
         retdict = super(ModelInputBase, cls)._use_methods
-        retdict.update(
+        retdict.update(  # pylint: disable=no-member
             dict(
                 tb_model=dict(
                     valid_types=SinglefileData,

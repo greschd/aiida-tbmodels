@@ -3,20 +3,29 @@
 
 # © 2017-2019, ETH Zurich, Institut für Theoretische Physik
 # Author: Dominik Gresch <greschd@gmx.ch>
+"""
+Defines tests for the tbmodels.slice calculation.
+"""
 
 from __future__ import division, unicode_literals
 
-import numpy as np
 
-
-def test_slice(configure_with_daemon, sample, get_tbmodels_process_builder):
+def test_slice(
+    configure_with_daemon,  # pylint: disable=unused-argument
+    sample,
+    get_tbmodels_process_builder
+):
+    """
+    Run the tbmodels.slice calculation and check that it outputs
+    a tight-binding model.
+    """
     from aiida.orm import DataFactory
     from aiida.orm.data.base import List
     from aiida.work.run import run
 
     builder = get_tbmodels_process_builder('tbmodels.slice')
 
-    SinglefileData = DataFactory('singlefile')
+    SinglefileData = DataFactory('singlefile')  # pylint: disable=invalid-name
     input_model = SinglefileData()
     input_model.add_path(sample('model.hdf5'))
     builder.tb_model = input_model

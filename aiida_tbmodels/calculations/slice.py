@@ -2,14 +2,13 @@
 
 # © 2017-2019, ETH Zurich, Institut für Theoretische Physik
 # Author: Dominik Gresch <greschd@gmx.ch>
+"""
+Defines the tbmodels.slice calculation.
+"""
 
-import os
-import json
-
-from aiida.orm import DataFactory
 from aiida.orm.data.base import List
 from aiida.common.utils import classproperty
-from aiida.common.exceptions import InputValidationError, ValidationError
+from aiida.common.exceptions import InputValidationError
 
 from ._base import ModelInputBase, ModelOutputBase
 
@@ -20,9 +19,9 @@ class SliceCalculation(ModelInputBase, ModelOutputBase):
     """
 
     @classproperty
-    def _use_methods(cls):
+    def _use_methods(cls):  # pylint: disable=no-self-argument
         retdict = super(SliceCalculation, cls)._use_methods
-        retdict.update(
+        retdict.update(  # pylint: disable=no-member
             slice_idx=dict(
                 valid_types=List,
                 additional_parameter=None,

@@ -2,14 +2,16 @@
 
 # © 2017-2019, ETH Zurich, Institut für Theoretische Physik
 # Author: Dominik Gresch <greschd@gmx.ch>
+"""
+Defines the tbmodels.parse calculation.
+"""
 
 import os
-import json
 
 from aiida.orm.data.base import Str
 from aiida.orm.data.folder import FolderData
 from aiida.common.utils import classproperty
-from aiida.common.exceptions import InputValidationError, ValidationError
+from aiida.common.exceptions import InputValidationError
 
 from ._base import ModelOutputBase
 
@@ -20,9 +22,9 @@ class ParseCalculation(ModelOutputBase):
     """
 
     @classproperty
-    def _use_methods(cls):
+    def _use_methods(cls):  # pylint: disable=no-self-argument
         retdict = super(ParseCalculation, cls)._use_methods
-        retdict.update(
+        retdict.update(  # pylint: disable=no-member
             dict(
                 wannier_folder=dict(
                     valid_types=FolderData,
