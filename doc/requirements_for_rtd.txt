@@ -1,6 +1,3 @@
-strain
 aiida-core>=1.0.0a1
-fsc.export
-aiida-tools
-aiida-symmetry-representation
-numpy==1.14.3
+aiida-bands-inspect
+future

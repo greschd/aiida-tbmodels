@@ -3,3 +3,4 @@
 .cache
 .pytest_cache
 .ropeproject
+dist
