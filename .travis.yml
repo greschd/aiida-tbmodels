@@ -1,5 +1,7 @@
 language: python
-python: 2.7
+python:
+  - "2.7"
+  - "3.6"
 cache: pip
 sudo: true
 dist: xenial
@@ -26,8 +28,6 @@ before_install:
 install:
   - pip install -U pip wheel setuptools
   - pip install git+https://github.com/aiidateam/aiida_core.git#egg=aiida_core
-  - pip install git+https://github.com/greschd/aiida_pytest@develop#egg=aiida_pytest
-  - pip install git+https://github.com/greschd/aiida-bands-inspect.git#egg=aiida-bands-inspect
   - pip install .[dev]
 env:
   - TEST_TYPE="pre-commit"

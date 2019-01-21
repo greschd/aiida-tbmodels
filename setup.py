@@ -22,12 +22,13 @@ if __name__ == '__main__':
         author='Dominik Gresch',
         author_email='greschd@gmx.ch',
         url='http://z2pack.ethz.ch/aiida-plugins/aiida-tbmodels',
-        license='MIT',
+        license='Apache 2.0',
         classifiers=[
             'Development Status :: 3 - Alpha', 'Environment :: Plugins',
-            'Framework :: AiiDA', 'Intended Audience :: Science/Research',
-            'License :: OSI Approved :: MIT License',
+            'Intended Audience :: Science/Research',
+            'License :: OSI Approved :: Apache Software License',
             'Programming Language :: Python :: 2.7',
+            'Programming Language :: Python :: 3.6',
             'Topic :: Scientific/Engineering :: Physics'
         ],
         keywords='tbmodels aiida workflows',
