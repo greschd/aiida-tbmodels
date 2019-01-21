@@ -7,9 +7,33 @@ import os
 import sys
 import time
 
-# If extensions (or modules to document with autodoc) are in another directory,
-# add these directories to sys.path here. If the directory is relative to the
-# documentation root, use os.path.abspath to make it absolute, like shown here.
+sys.path.append(os.path.join(os.path.dirname(__file__), os.pardir))
+
+os.environ['DJANGO_SETTINGS_MODULE'] = 'rtd_settings'
+
+import aiida
+from aiida.backends import settings
+
+# We set that we are in documentation mode - even for local compilation
+settings.IN_DOC_MODE = True
+
+# on_rtd is whether we are on readthedocs.org, this line of code grabbed
+# from docs.readthedocs.org
+# NOTE: it is needed to have these lines before load_dbenv()
+on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
+
+if not on_rtd:  # only import and set the theme if we're building docs locally
+    html_theme = 'sphinx_rtd_theme'
+    # Loading the dbenv. The backend should be fixed before compiling the
+    # documentation.
+    aiida.try_load_dbenv()
+else:
+    # Back-end settings for readthedocs online documentation.
+    # from aiida.backends import settings
+    settings.IN_RT_DOC_MODE = True
+    settings.BACKEND = "django"
+    settings.AIIDADB_PROFILE = "default"
+
 import aiida_tbmodels
 
 # -- General configuration ------------------------------------------------
@@ -25,6 +49,7 @@ extensions = [
     'sphinx.ext.mathjax',
     'sphinx.ext.intersphinx',
     'sphinx.ext.viewcode',
+    'sphinx.ext.napoleon',
 ]
 
 intersphinx_mapping = {
@@ -49,7 +74,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'aiida-tbmodels'
-copyright = u'2015-{}, ECOLE POLYTECHNIQUE FEDERALE DE LAUSANNE (Theory and Simulation of Materials (THEOS) and ETH Zurich and National Centre for Computational Design and Discovery of Novel Materials (NCCR MARVEL)), Switzerland. All rights reserved.'.format(
+copyright = u'2017-{}, ETH Zurich, Switzerland. All rights reserved.'.format(
     time.localtime().tm_year
 )
 
