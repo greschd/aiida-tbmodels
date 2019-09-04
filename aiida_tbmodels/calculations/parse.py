@@ -8,10 +8,10 @@ Defines the tbmodels.parse calculation.
 
 import os
 
-from aiida.orm.data.base import Str
-from aiida.orm.data.folder import FolderData
+from aiida.orm import Str
+from aiida.orm.nodes.data.folder import FolderData
 from aiida.common.utils import classproperty
-from aiida.common.exceptions import InputValidationError
+from aiida.common import InputValidationError
 
 from ._base import ModelOutputBase
 
@@ -43,7 +43,7 @@ class ParseCalculation(ModelOutputBase):
         )
         return retdict
 
-    def _prepare_for_submission(self, tempfolder, inputdict):
+    def prepare_for_submission(self, tempfolder, inputdict):
         try:
             wannier_folder = inputdict.pop(self.get_linkname('wannier_folder'))
         except KeyError:
@@ -66,7 +66,7 @@ class ParseCalculation(ModelOutputBase):
             )
 
         calcinfo, codeinfo = super(ParseCalculation,
-                                   self)._prepare_for_submission(
+                                   self).prepare_for_submission(
                                        tempfolder, inputdict
                                    )
 

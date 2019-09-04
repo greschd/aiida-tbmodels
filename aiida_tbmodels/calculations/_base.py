@@ -8,19 +8,19 @@ Defines the base classes for tbmodels calculations.
 
 # pylint: disable=abstract-method
 
-from aiida.orm import JobCalculation
+from aiida.orm import CalcJob
 from aiida.common.utils import classproperty
-from aiida.orm.data.singlefile import SinglefileData
-from aiida.common.exceptions import InputValidationError, ValidationError
-from aiida.common.datastructures import CalcInfo, CodeInfo
+from aiida.orm import SinglefileData
+from aiida.common import InputValidationError, ValidationError
+from aiida.common import CalcInfo, CodeInfo
 
 
-class TbmodelsBase(JobCalculation):
+class TbmodelsBase(CalcJob):
     """
     General base class for calculations which run the tbmodels code.
     """
 
-    def _prepare_for_submission(self, tempfolder, inputdict):
+    def prepare_for_submission(self, tempfolder, inputdict):
         try:
             code = inputdict.pop(self.get_linkname('code'))
         except KeyError:
@@ -55,9 +55,9 @@ class ModelOutputBase(TbmodelsBase):
         self._OUTPUT_FILE_NAME = 'model_out.hdf5'
         self._default_parser = 'tbmodels.model'
 
-    def _prepare_for_submission(self, tempfolder, inputdict):
+    def prepare_for_submission(self, tempfolder, inputdict):
         calcinfo, codeinfo = super(ModelOutputBase,
-                                   self)._prepare_for_submission(
+                                   self).prepare_for_submission(
                                        tempfolder, inputdict
                                    )
         calcinfo.retrieve_list = [self._OUTPUT_FILE_NAME]
@@ -84,7 +84,7 @@ class ModelInputBase(TbmodelsBase):
         )
         return retdict
 
-    def _prepare_for_submission(self, tempfolder, inputdict):
+    def prepare_for_submission(self, tempfolder, inputdict):
         try:
             model_file = inputdict.pop(self.get_linkname('tb_model'))
         except KeyError:
@@ -93,7 +93,7 @@ class ModelInputBase(TbmodelsBase):
             )
 
         calcinfo, codeinfo = super(ModelInputBase,
-                                   self)._prepare_for_submission(
+                                   self).prepare_for_submission(
                                        tempfolder, inputdict
                                    )
         calcinfo.local_copy_list = [

@@ -19,9 +19,9 @@ def test_slice(
     Run the tbmodels.slice calculation and check that it outputs
     a tight-binding model.
     """
-    from aiida.orm import DataFactory
-    from aiida.orm.data.base import List
-    from aiida.work.run import run
+    from aiida.plugins import DataFactory
+    from aiida.orm import List
+    from aiida.engine import run
 
     builder = get_tbmodels_process_builder('tbmodels.slice')
 

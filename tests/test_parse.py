@@ -20,7 +20,7 @@ def get_tbmodels_parse_builder(sample, get_tbmodels_process_builder):
     Fixture which creates a builder for the tbmodels.parse
     calculation.
     """
-    from aiida.orm.data.folder import FolderData
+    from aiida.orm.nodes.data.folder import FolderData
 
     builder = get_tbmodels_process_builder('tbmodels.parse')
 
@@ -41,8 +41,8 @@ def test_parse(
     """
     Test the parse calculation when launched with 'run_get_node'.
     """
-    from aiida.orm.data.singlefile import SinglefileData
-    from aiida.work.launch import run_get_node
+    from aiida.orm import SinglefileData
+    from aiida.engine.launch import run_get_node
 
     builder = get_tbmodels_parse_builder
     output, calc = run_get_node(builder)
@@ -61,8 +61,8 @@ def test_parse_submit(
     """
     Test the parse calculation when submitted to the daemon.
     """
-    from aiida.orm.data.singlefile import SinglefileData
-    from aiida.work.launch import submit
+    from aiida.orm import SinglefileData
+    from aiida.engine.launch import submit
 
     builder = get_tbmodels_parse_builder
     calc = submit(builder)

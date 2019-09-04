@@ -6,7 +6,7 @@
 Defines the parser for tight-binding models in TBmodels HDF5 format.
 """
 
-from aiida.orm import DataFactory
+from aiida.plugins import DataFactory
 from aiida.parsers.parser import Parser
 
 
@@ -15,7 +15,7 @@ class ModelParser(Parser):
     Parse TBmodels output to a SinglefileData containing the model file.
     """
 
-    def parse_with_retrieved(self, retrieved):
+    def parse(self, **kwargs):
         try:
             out_folder = retrieved[self._calc._get_linkname_retrieved()]
         except KeyError as err:

@@ -16,8 +16,8 @@ def test_eigenvals(
     """
     Test that the eigenvals calculation creates a bands output.
     """
-    from aiida.orm import DataFactory
-    from aiida.work.run import run
+    from aiida.plugins import DataFactory
+    from aiida.engine import run
 
     builder = get_tbmodels_process_builder('tbmodels.eigenvals')
 

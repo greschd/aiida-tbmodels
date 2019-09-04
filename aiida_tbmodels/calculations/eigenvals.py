@@ -6,7 +6,7 @@
 Defines the tbmodels.eigenvals calculation.
 """
 
-from aiida.orm import DataFactory
+from aiida.plugins import DataFactory
 from aiida.common.utils import classproperty
 from aiida_bands_inspect.io import write_kpoints
 
@@ -37,12 +37,12 @@ class EigenvalsCalculation(ModelInputBase):
         )
         return retdict
 
-    def _prepare_for_submission(self, tempfolder, inputdict):
+    def prepare_for_submission(self, tempfolder, inputdict):
         kpoints_file = tempfolder.get_abs_path('kpoints.hdf5')
         write_kpoints(inputdict.pop('kpoints'), kpoints_file)
 
         calcinfo, codeinfo = super(EigenvalsCalculation,
-                                   self)._prepare_for_submission(
+                                   self).prepare_for_submission(
                                        tempfolder, inputdict
                                    )
         calcinfo.retrieve_list = [self._OUTPUT_FILE_NAME]

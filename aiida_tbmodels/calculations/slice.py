@@ -6,9 +6,9 @@
 Defines the tbmodels.slice calculation.
 """
 
-from aiida.orm.data.base import List
+from aiida.orm import List
 from aiida.common.utils import classproperty
-from aiida.common.exceptions import InputValidationError
+from aiida.common import InputValidationError
 
 from ._base import ModelInputBase, ModelOutputBase
 
@@ -32,7 +32,7 @@ class SliceCalculation(ModelInputBase, ModelOutputBase):
         )
         return retdict
 
-    def _prepare_for_submission(self, tempfolder, inputdict):
+    def prepare_for_submission(self, tempfolder, inputdict):
         try:
             slice_idx = inputdict.pop(self.get_linkname('slice_idx'))
         except KeyError:
@@ -41,7 +41,7 @@ class SliceCalculation(ModelInputBase, ModelOutputBase):
             )
 
         calcinfo, codeinfo = super(SliceCalculation,
-                                   self)._prepare_for_submission(
+                                   self).prepare_for_submission(
                                        tempfolder, inputdict
                                    )
 

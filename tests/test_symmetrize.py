@@ -18,8 +18,8 @@ def test_symmetrize(
     """
     Tests that the 'symmetrize' calculation successfully creates an output.
     """
-    from aiida.orm import DataFactory
-    from aiida.work.run import run
+    from aiida.plugins import DataFactory
+    from aiida.engine import run
 
     builder = get_tbmodels_process_builder('tbmodels.symmetrize')
 

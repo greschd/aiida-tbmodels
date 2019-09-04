@@ -6,9 +6,9 @@
 Defines the tbmodels.symmetrize calculation.
 """
 
-from aiida.orm.data.singlefile import SinglefileData
+from aiida.orm import SinglefileData
 from aiida.common.utils import classproperty
-from aiida.common.exceptions import InputValidationError
+from aiida.common import InputValidationError
 
 from ._base import ModelInputBase, ModelOutputBase
 
@@ -31,7 +31,7 @@ class SymmetrizeCalculation(ModelInputBase, ModelOutputBase):
         )
         return retdict
 
-    def _prepare_for_submission(self, tempfolder, inputdict):
+    def prepare_for_submission(self, tempfolder, inputdict):
         try:
             symmetries_file = inputdict.pop(self.get_linkname('symmetries'))
         except KeyError:
@@ -40,7 +40,7 @@ class SymmetrizeCalculation(ModelInputBase, ModelOutputBase):
             )
 
         calcinfo, codeinfo = super(SymmetrizeCalculation,
-                                   self)._prepare_for_submission(
+                                   self).prepare_for_submission(
                                        tempfolder, inputdict
                                    )
 
