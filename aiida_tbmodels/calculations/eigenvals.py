@@ -6,6 +6,8 @@
 Defines the tbmodels.eigenvals calculation.
 """
 
+import six
+
 from aiida.plugins import DataFactory
 from aiida.common.utils import classproperty
 from aiida_bands_inspect.io import write_kpoints
@@ -18,34 +20,36 @@ class EigenvalsCalculation(ModelInputBase):
     Calculation class for the 'tbmodels eigenvals' command, which computes the eigenvalues from a given tight-binding model.
     """
 
-    def _init_internal_params(self):
-        super(EigenvalsCalculation, self)._init_internal_params()
+    _DEFAULT_OUTPUT_FILE = 'eigenvals.hdf5'
 
-        self._OUTPUT_FILE_NAME = 'eigenvals.hdf5'
-        self._default_parser = 'bands_inspect.bands'
+    @classmethod
+    def define(cls, spec):
+        super(EigenvalsCalculation, cls).define(spec)
 
-    @classproperty
-    def _use_methods(cls):  # pylint: disable=no-self-argument
-        retdict = super(EigenvalsCalculation, cls)._use_methods
-        retdict.update(  # pylint: disable=no-member
-            kpoints=dict(
-                valid_types=DataFactory('array.kpoints'),
-                additional_parameter=None,
-                linkname='kpoints',
-                docstring="Kpoints for which the eigenvalues are calculated."
-            )
+        spec.input(
+            'metadata.options.parser_name',
+            valid_type=six.string_types,
+            default='bands_inspect.bands'
         )
-        return retdict
+        spec.input(
+            'kpoints',
+            valid_type=DataFactory('array.kpoints'),
+            help="Kpoints for which the eigenvalues are calculated."
+        )
+        spec.output(
+            'bands',
+            valid_type=DataFactory('array.bands'),
+            help="The calculated eigenvalues of the model at given k-points."
+        )
 
-    def prepare_for_submission(self, tempfolder, inputdict):
-        kpoints_file = tempfolder.get_abs_path('kpoints.hdf5')
-        write_kpoints(inputdict.pop('kpoints'), kpoints_file)
+    def prepare_for_submission(self, tempfolder):
+        write_kpoints(
+            self.inputs.kpoints, tempfolder.open('kpoints.hdf5', 'w+b')
+        )
 
         calcinfo, codeinfo = super(EigenvalsCalculation,
-                                   self).prepare_for_submission(
-                                       tempfolder, inputdict
-                                   )
-        calcinfo.retrieve_list = [self._OUTPUT_FILE_NAME]
+                                   self).prepare_for_submission(tempfolder)
+        calcinfo.retrieve_list = [self.inputs.metadata.options.output_filename]
 
         codeinfo.cmdline_params = ['eigenvals', '-k', 'kpoints.hdf5']
         return calcinfo

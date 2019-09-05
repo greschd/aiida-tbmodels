@@ -17,14 +17,12 @@ class ModelParser(Parser):
 
     def parse(self, **kwargs):
         try:
-            out_folder = retrieved[self._calc._get_linkname_retrieved()]
+            out_folder = self.retrieved
         except KeyError as err:
             self.logger.error("No retrieved folder found")
             raise err
 
-        model_file = out_folder.get_abs_path(self._calc._OUTPUT_FILE_NAME)  # pylint: disable=protected-access
-        model_node = DataFactory('singlefile')()
-        model_node.add_path(model_file)
-        new_nodes_list = [('tb_model', model_node)]
+        model_node = DataFactory('singlefile')(file=out_folder.open(self.node.get_option('output_filename')))
 
-        return True, new_nodes_list
+        self.out('tb_model', model_node)
+

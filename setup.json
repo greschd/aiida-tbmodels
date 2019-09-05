@@ -36,6 +36,7 @@
   ],
   "reentry_register": true,
   "install_requires": [
+    "six",
     "future",
     "aiida-core",
     "aiida-bands-inspect"
