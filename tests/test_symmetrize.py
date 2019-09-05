@@ -25,13 +25,9 @@ def test_symmetrize(
 
     SinglefileData = DataFactory('singlefile')  # pylint: disable=invalid-name
 
-    input_model = SinglefileData()
-    input_model.add_path(sample('model.hdf5'))
-    builder.tb_model = input_model
+    builder.tb_model = SinglefileData(file=sample('model.hdf5'))
 
-    input_symmetries = SinglefileData()
-    input_symmetries.add_path(sample('symmetries.hdf5'))
-    builder.symmetries = input_symmetries
+    builder.symmetries = SinglefileData(file=sample('symmetries.hdf5'))
 
     output = run(builder)
     assert isinstance(output['tb_model'], SinglefileData)

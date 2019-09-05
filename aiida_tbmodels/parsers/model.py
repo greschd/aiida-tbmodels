@@ -22,7 +22,6 @@ class ModelParser(Parser):
             self.logger.error("No retrieved folder found")
             raise err
 
-        model_node = DataFactory('singlefile')(file=out_folder.open(self.node.get_option('output_filename')))
+        model_node = DataFactory('singlefile')(file=out_folder.open(self.node.get_option('output_filename'), 'rb'))
 
         self.out('tb_model', model_node)
-

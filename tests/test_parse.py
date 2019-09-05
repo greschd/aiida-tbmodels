@@ -27,7 +27,7 @@ def get_tbmodels_parse_builder(sample, get_tbmodels_process_builder):
     input_path = sample('bi_wannier_output')
     input_folder = FolderData()
     for filename in os.listdir(input_path):
-        input_folder.add_path(os.path.join(input_path, filename), filename)
+        input_folder.put_object_from_file(os.path.join(input_path, filename), filename)
     builder.wannier_folder = input_folder
 
     return builder
@@ -68,7 +68,6 @@ def test_parse_submit(
     calc = submit(builder)
     wait_for(calc.pk)
     assert_finished(calc.pk)
-    output = calc.get_outputs_dict()
 
-    assert isinstance(output['tb_model'], SinglefileData)
+    assert isinstance(calc.outputs.tb_model, SinglefileData)
     assert calc.get_hash() == calc.get_extra('_aiida_hash')

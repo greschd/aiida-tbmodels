@@ -10,9 +10,7 @@ import six
 
 from aiida.orm import SinglefileData
 from aiida.engine import CalcJob
-from aiida.common import InputValidationError, ValidationError
 from aiida.common import CalcInfo, CodeInfo
-from aiida.common.utils import classproperty
 
 
 class TbmodelsBase(CalcJob):
@@ -56,6 +54,12 @@ class ModelOutputBase(TbmodelsBase):
             'metadata.options.parser_name',
             valid_type=six.string_types,
             default='tbmodels.model'
+        )
+
+        spec.output(
+            'tb_model',
+            valid_type=SinglefileData,
+            help="Output model in TBmodels HDF5 format."
         )
 
     def prepare_for_submission(self, tempfolder):

@@ -9,7 +9,6 @@ Defines the tbmodels.eigenvals calculation.
 import six
 
 from aiida.plugins import DataFactory
-from aiida.common.utils import classproperty
 from aiida_bands_inspect.io import write_kpoints
 
 from ._base import ModelInputBase

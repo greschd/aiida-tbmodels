@@ -26,13 +26,9 @@ def test_slice(
     builder = get_tbmodels_process_builder('tbmodels.slice')
 
     SinglefileData = DataFactory('singlefile')  # pylint: disable=invalid-name
-    input_model = SinglefileData()
-    input_model.add_path(sample('model.hdf5'))
-    builder.tb_model = input_model
+    builder.tb_model = SinglefileData(file=sample('model.hdf5'))
 
-    slice_idx = List()
-    slice_idx.extend([0, 3, 2, 1])
-    builder.slice_idx = slice_idx
+    builder.slice_idx = List(list=[0, 3, 2, 1])
 
     output = run(builder)
     assert isinstance(output['tb_model'], SinglefileData)
