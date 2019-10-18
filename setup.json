@@ -14,7 +14,8 @@
     "Programming Language :: Python :: 2.7",
     "Programming Language :: Python :: 3.6",
     "Programming Language :: Python :: 3.7",
-    "Topic :: Scientific/Engineering :: Physics"
+    "Topic :: Scientific/Engineering :: Physics",
+    "Framework : : AiiDA"
   ],
   "keywords": [
     "tbmodels",
