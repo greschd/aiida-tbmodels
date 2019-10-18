@@ -27,6 +27,11 @@ class ParseCalculation(ModelOutputBase):
             help=
             "Folder containing the Wannier90 output data, with prefix 'wannier90'."
         )
+        spec.exit_code(
+            300,
+            'ERROR_OUTPUT_MODEL_FILE',
+            message='The output model HDF5 file was not found.'
+        )
         spec.input(
             'pos_kind',
             valid_type=Str,

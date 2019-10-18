@@ -35,6 +35,11 @@ class EigenvalsCalculation(ModelInputBase):
             valid_type=DataFactory('array.kpoints'),
             help="Kpoints for which the eigenvalues are calculated."
         )
+        # spec.exit_code(
+        #     300,
+        #     'ERROR_OUTPUT_FILE',
+        #     message='The output HDF5 file was not found.'
+        # )
         spec.output(
             'bands',
             valid_type=DataFactory('array.bands'),

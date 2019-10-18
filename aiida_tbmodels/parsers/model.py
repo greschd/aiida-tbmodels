@@ -14,16 +14,19 @@ class ModelParser(Parser):
     """
     Parse TBmodels output to a SinglefileData containing the model file.
     """
-    def parse(self, **kwargs):
+    def parse(self, **kwargs):  # pylint: disable=inconsistent-return-statements
         try:
             out_folder = self.retrieved
         except KeyError as err:
             self.logger.error("No retrieved folder found")
             raise err
 
-        model_node = DataFactory('singlefile')(
-            file=out_folder.
-            open(self.node.get_option('output_filename'), 'rb')
-        )
+        try:
+            model_node = DataFactory('singlefile')(
+                file=out_folder.
+                open(self.node.get_option('output_filename'), 'rb')
+            )
+        except IOError:
+            return self.exit_codes.ERROR_OUTPUT_MODEL_FILE
 
         self.out('tb_model', model_node)

@@ -24,6 +24,11 @@ class SymmetrizeCalculation(ModelInputBase, ModelOutputBase):
             valid_type=SinglefileData,
             help="File containing the symmetries in HDF5 format."
         )
+        spec.exit_code(
+            300,
+            'ERROR_OUTPUT_MODEL_FILE',
+            message='The output model HDF5 file was not found.'
+        )
 
     def prepare_for_submission(self, tempfolder):
         calcinfo, codeinfo = super(SymmetrizeCalculation,
