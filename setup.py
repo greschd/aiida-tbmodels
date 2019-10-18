@@ -11,11 +11,6 @@ import os
 import json
 from setuptools import setup, find_packages
 
-# Get the version number
-with open('./aiida_tbmodels/__init__.py') as f:
-    MATCH_EXPR = "__version__[^'\"]+(['\"])([^'\"]+)"
-    VERSION = re.search(MATCH_EXPR, f.read()).group(2).strip()
-
 SETUP_JSON_PATH = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), 'setup.json'
 )
@@ -29,7 +24,6 @@ EXTRAS_REQUIRE['dev'] = (
 
 if __name__ == '__main__':
     setup(
-        version=VERSION,
         packages=find_packages(exclude=['aiida']),
         long_description=open(
             os.path.join(
