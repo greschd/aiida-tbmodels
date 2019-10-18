@@ -27,7 +27,9 @@ def get_tbmodels_parse_builder(sample, get_tbmodels_process_builder):
     input_path = sample('bi_wannier_output')
     input_folder = FolderData()
     for filename in os.listdir(input_path):
-        input_folder.put_object_from_file(os.path.join(input_path, filename), filename)
+        input_folder.put_object_from_file(
+            os.path.join(input_path, filename), filename
+        )
     builder.wannier_folder = input_folder
 
     return builder

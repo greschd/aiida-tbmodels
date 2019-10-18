@@ -15,7 +15,6 @@ class SliceCalculation(ModelInputBase, ModelOutputBase):
     """
     Calculation plugin for the 'tbmodels slice' command, which re-orders or slices orbitals of a tight-binding model.
     """
-
     @classmethod
     def define(cls, spec):
         super(SliceCalculation, cls).define(spec)
@@ -30,7 +29,8 @@ class SliceCalculation(ModelInputBase, ModelOutputBase):
         calcinfo, codeinfo = super(SliceCalculation,
                                    self).prepare_for_submission(tempfolder)
 
-        codeinfo.cmdline_params = ['slice', '-o', self.inputs.metadata.options.output_filename
-                                   ] + [str(x) for x in self.inputs.slice_idx]
+        codeinfo.cmdline_params = [
+            'slice', '-o', self.inputs.metadata.options.output_filename
+        ] + [str(x) for x in self.inputs.slice_idx]
 
         return calcinfo

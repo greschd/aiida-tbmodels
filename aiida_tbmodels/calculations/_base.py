@@ -27,7 +27,7 @@ class TbmodelsBase(CalcJob):
             default=cls._DEFAULT_OUTPUT_FILE
         )
 
-    def prepare_for_submission(self, tempfolder):  # pylint: disable=unused-argument
+    def prepare_for_submission(self, tempfolder):  # pylint: disable=unused-argument,arguments-differ
         calcinfo = CalcInfo()
         calcinfo.uuid = self.uuid
         calcinfo.remote_copy_list = []

@@ -17,7 +17,6 @@ def get_tbmodels_process_builder(get_process_builder):  # pylint: disable=redefi
     """
     Fixture that creates a Builder for tbmodels calculations.
     """
-
     def inner(calculation_string):
         return get_process_builder(
             calculation_string=calculation_string, code_string='tbmodels'

@@ -15,7 +15,6 @@ class SymmetrizeCalculation(ModelInputBase, ModelOutputBase):
     """
     Calculation class for the 'tbmodels symmetrize' command, which creates a symmetrized tight-binding model from a tight-binding model and symmetry representations.
     """
-
     @classmethod
     def define(cls, spec):
         super(SymmetrizeCalculation, cls).define(spec)
@@ -34,8 +33,14 @@ class SymmetrizeCalculation(ModelInputBase, ModelOutputBase):
 
         # add symmetries to the files to be copied
         calcinfo.local_copy_list += [
-            (symmetries_file.uuid, symmetries_file.filename, 'symmetries.hdf5'),
+            (
+                symmetries_file.uuid, symmetries_file.filename,
+                'symmetries.hdf5'
+            ),
         ]
-        codeinfo.cmdline_params = ['symmetrize', '-o', self.node.get_option('output_filename')]
+        codeinfo.cmdline_params = [
+            'symmetrize', '-o',
+            self.node.get_option('output_filename')
+        ]
 
         return calcinfo

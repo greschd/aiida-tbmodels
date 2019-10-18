@@ -17,7 +17,6 @@ class ParseCalculation(ModelOutputBase):
     """
     Calculation plugin for the 'tbmodels parse' command, which creates a TBmodels tight-binding model from the Wannier90 output.
     """
-
     @classmethod
     def define(cls, spec):
         super(ParseCalculation, cls).define(spec)
