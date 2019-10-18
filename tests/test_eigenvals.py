@@ -16,14 +16,12 @@ def test_eigenvals(
     """
     Test that the eigenvals calculation creates a bands output.
     """
-    from aiida.orm import DataFactory
-    from aiida.work.run import run
+    from aiida.plugins import DataFactory
+    from aiida.engine import run
 
     builder = get_tbmodels_process_builder('tbmodels.eigenvals')
 
-    input_model = DataFactory('singlefile')()
-    input_model.add_path(sample('model.hdf5'))
-    builder.tb_model = input_model
+    builder.tb_model = DataFactory('singlefile')(file=sample('model.hdf5'))
 
     k_mesh = DataFactory('array.kpoints')()
     k_mesh.set_kpoints_mesh([4, 4, 4], offset=[0, 0, 0])

@@ -13,25 +13,23 @@ from __future__ import division, print_function, unicode_literals
 def test_symmetrize(
     configure_with_daemon,  # pylint: disable=unused-argument
     sample,
-    get_tbmodels_process_builder
+    get_tbmodels_process_builder,
+    check_calc_ok
 ):
     """
     Tests that the 'symmetrize' calculation successfully creates an output.
     """
-    from aiida.orm import DataFactory
-    from aiida.work.run import run
+    from aiida.plugins import DataFactory
+    from aiida.engine import run_get_node
 
     builder = get_tbmodels_process_builder('tbmodels.symmetrize')
 
     SinglefileData = DataFactory('singlefile')  # pylint: disable=invalid-name
 
-    input_model = SinglefileData()
-    input_model.add_path(sample('model.hdf5'))
-    builder.tb_model = input_model
+    builder.tb_model = SinglefileData(file=sample('model.hdf5'))
 
-    input_symmetries = SinglefileData()
-    input_symmetries.add_path(sample('symmetries.hdf5'))
-    builder.symmetries = input_symmetries
+    builder.symmetries = SinglefileData(file=sample('symmetries.hdf5'))
 
-    output = run(builder)
+    output, calc = run_get_node(builder)
+    check_calc_ok(calc)
     assert isinstance(output['tb_model'], SinglefileData)

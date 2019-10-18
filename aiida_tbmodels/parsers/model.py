@@ -6,7 +6,7 @@
 Defines the parser for tight-binding models in TBmodels HDF5 format.
 """
 
-from aiida.orm import DataFactory
+from aiida.plugins import DataFactory
 from aiida.parsers.parser import Parser
 
 
@@ -14,17 +14,19 @@ class ModelParser(Parser):
     """
     Parse TBmodels output to a SinglefileData containing the model file.
     """
-
-    def parse_with_retrieved(self, retrieved):
+    def parse(self, **kwargs):  # pylint: disable=inconsistent-return-statements
         try:
-            out_folder = retrieved[self._calc._get_linkname_retrieved()]
+            out_folder = self.retrieved
         except KeyError as err:
             self.logger.error("No retrieved folder found")
             raise err
 
-        model_file = out_folder.get_abs_path(self._calc._OUTPUT_FILE_NAME)  # pylint: disable=protected-access
-        model_node = DataFactory('singlefile')()
-        model_node.add_path(model_file)
-        new_nodes_list = [('tb_model', model_node)]
+        try:
+            model_node = DataFactory('singlefile')(
+                file=out_folder.
+                open(self.node.get_option('output_filename'), 'rb')
+            )
+        except IOError:
+            return self.exit_codes.ERROR_OUTPUT_MODEL_FILE
 
-        return True, new_nodes_list
+        self.out('tb_model', model_node)

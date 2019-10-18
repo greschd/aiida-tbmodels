@@ -13,26 +13,24 @@ from __future__ import division, unicode_literals
 def test_slice(
     configure_with_daemon,  # pylint: disable=unused-argument
     sample,
-    get_tbmodels_process_builder
+    get_tbmodels_process_builder,
+    check_calc_ok
 ):
     """
     Run the tbmodels.slice calculation and check that it outputs
     a tight-binding model.
     """
-    from aiida.orm import DataFactory
-    from aiida.orm.data.base import List
-    from aiida.work.run import run
+    from aiida.plugins import DataFactory
+    from aiida.orm import List
+    from aiida.engine import run_get_node
 
     builder = get_tbmodels_process_builder('tbmodels.slice')
 
     SinglefileData = DataFactory('singlefile')  # pylint: disable=invalid-name
-    input_model = SinglefileData()
-    input_model.add_path(sample('model.hdf5'))
-    builder.tb_model = input_model
+    builder.tb_model = SinglefileData(file=sample('model.hdf5'))
 
-    slice_idx = List()
-    slice_idx.extend([0, 3, 2, 1])
-    builder.slice_idx = slice_idx
+    builder.slice_idx = List(list=[0, 3, 2, 1])
 
-    output = run(builder)
+    output, calc = run_get_node(builder)
+    check_calc_ok(calc)
     assert isinstance(output['tb_model'], SinglefileData)
