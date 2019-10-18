@@ -12,10 +12,10 @@ from __future__ import division, print_function, unicode_literals
 import os
 
 from aiida.orm import Code
-from aiida.orm.data.base import List
-from aiida.orm.data.singlefile import SinglefileData
+from aiida.orm import List
+from aiida.orm import SinglefileData
 from aiida.orm.querybuilder import QueryBuilder
-from aiida.work.launch import run_get_pid
+from aiida.engine.launch import run_get_pk
 
 from aiida_tbmodels.calculations.slice import SliceCalculation
 
@@ -33,8 +33,7 @@ def get_singlefile_instance(description, path):
     res = query_builder.all()
     if len(res) == 0:
         # create archive
-        res = SinglefileData()
-        res.add_path(os.path.abspath(path))
+        res = SinglefileData(file=os.path.abspath(path))
         res.description = description
         res.store()
     elif len(res) > 1:
@@ -58,13 +57,13 @@ def run_slice():
     )
 
     # single-core on local machine
-    builder.options = dict(
+    builder.metadata.options = dict(
         resources=dict(num_machines=1, tot_num_mpiprocs=1), withmpi=False
     )
 
     builder.slice_idx = List(list=[0, 3, 2, 1])
 
-    result, pid = run_get_pid(builder)
+    result, pid = run_get_pk(builder)
     print('\nRan calculation with PID', pid)
     print('Result:\n', result)
 

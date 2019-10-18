@@ -6,9 +6,7 @@
 Defines the tbmodels.slice calculation.
 """
 
-from aiida.orm.data.base import List
-from aiida.common.utils import classproperty
-from aiida.common.exceptions import InputValidationError
+from aiida.orm import List
 
 from ._base import ModelInputBase, ModelOutputBase
 
@@ -17,35 +15,27 @@ class SliceCalculation(ModelInputBase, ModelOutputBase):
     """
     Calculation plugin for the 'tbmodels slice' command, which re-orders or slices orbitals of a tight-binding model.
     """
+    @classmethod
+    def define(cls, spec):
+        super(SliceCalculation, cls).define(spec)
 
-    @classproperty
-    def _use_methods(cls):  # pylint: disable=no-self-argument
-        retdict = super(SliceCalculation, cls)._use_methods
-        retdict.update(  # pylint: disable=no-member
-            slice_idx=dict(
-                valid_types=List,
-                additional_parameter=None,
-                linkname='slice_idx',
-                docstring=
-                "Indices of the orbitals which are sliced from the model."
-            )
+        spec.input(
+            'slice_idx',
+            valid_type=List,
+            help="Indices of the orbitals which are sliced from the model."
         )
-        return retdict
+        spec.exit_code(
+            300,
+            'ERROR_OUTPUT_MODEL_FILE',
+            message='The output model HDF5 file was not found.'
+        )
 
-    def _prepare_for_submission(self, tempfolder, inputdict):
-        try:
-            slice_idx = inputdict.pop(self.get_linkname('slice_idx'))
-        except KeyError:
-            raise InputValidationError(
-                'No slice_idx specified for this calculation.'
-            )
-
+    def prepare_for_submission(self, tempfolder):
         calcinfo, codeinfo = super(SliceCalculation,
-                                   self)._prepare_for_submission(
-                                       tempfolder, inputdict
-                                   )
+                                   self).prepare_for_submission(tempfolder)
 
-        codeinfo.cmdline_params = ['slice', '-o', self._OUTPUT_FILE_NAME
-                                   ] + [str(x) for x in slice_idx]
+        codeinfo.cmdline_params = [
+            'slice', '-o', self.inputs.metadata.options.output_filename
+        ] + [str(x) for x in self.inputs.slice_idx]
 
         return calcinfo

@@ -6,39 +6,34 @@
 Defines the base classes for tbmodels calculations.
 """
 
-# pylint: disable=abstract-method
+import six
 
-from aiida.orm import JobCalculation
-from aiida.common.utils import classproperty
-from aiida.orm.data.singlefile import SinglefileData
-from aiida.common.exceptions import InputValidationError, ValidationError
-from aiida.common.datastructures import CalcInfo, CodeInfo
+from aiida.orm import SinglefileData
+from aiida.engine import CalcJob
+from aiida.common import CalcInfo, CodeInfo
 
 
-class TbmodelsBase(JobCalculation):
+class TbmodelsBase(CalcJob):
     """
     General base class for calculations which run the tbmodels code.
     """
+    @classmethod
+    def define(cls, spec):
+        super(TbmodelsBase, cls).define(spec)
 
-    def _prepare_for_submission(self, tempfolder, inputdict):
-        try:
-            code = inputdict.pop(self.get_linkname('code'))
-        except KeyError:
-            raise InputValidationError(
-                'No code specified for this calculation.'
-            )
-        if inputdict:
-            raise ValidationError(
-                'Cannot add other nodes. Remaining input: {}'.
-                format(inputdict)
-            )
+        spec.input(
+            'metadata.options.output_filename',
+            valid_type=six.string_types,
+            default=cls._DEFAULT_OUTPUT_FILE
+        )
 
+    def prepare_for_submission(self, tempfolder):  # pylint: disable=unused-argument,arguments-differ
         calcinfo = CalcInfo()
         calcinfo.uuid = self.uuid
         calcinfo.remote_copy_list = []
 
         codeinfo = CodeInfo()
-        codeinfo.code_uuid = code.uuid
+        codeinfo.code_uuid = self.inputs.code.uuid
         calcinfo.codes_info = [codeinfo]
 
         return calcinfo, codeinfo
@@ -49,18 +44,28 @@ class ModelOutputBase(TbmodelsBase):
     Base class for calculations which have a model (in HDF5 form) as output.
     """
 
-    def _init_internal_params(self):
-        super(ModelOutputBase, self)._init_internal_params()
+    _DEFAULT_OUTPUT_FILE = 'model_out.hdf5'
 
-        self._OUTPUT_FILE_NAME = 'model_out.hdf5'
-        self._default_parser = 'tbmodels.model'
+    @classmethod
+    def define(cls, spec):
+        super(ModelOutputBase, cls).define(spec)
 
-    def _prepare_for_submission(self, tempfolder, inputdict):
+        spec.input(
+            'metadata.options.parser_name',
+            valid_type=six.string_types,
+            default='tbmodels.model'
+        )
+
+        spec.output(
+            'tb_model',
+            valid_type=SinglefileData,
+            help="Output model in TBmodels HDF5 format."
+        )
+
+    def prepare_for_submission(self, tempfolder):
         calcinfo, codeinfo = super(ModelOutputBase,
-                                   self)._prepare_for_submission(
-                                       tempfolder, inputdict
-                                   )
-        calcinfo.retrieve_list = [self._OUTPUT_FILE_NAME]
+                                   self).prepare_for_submission(tempfolder)
+        calcinfo.retrieve_list = [self.inputs.metadata.options.output_filename]
         return calcinfo, codeinfo
 
 
@@ -68,36 +73,25 @@ class ModelInputBase(TbmodelsBase):
     """
     Base class for calculations which take a model (in HDF5 form) as input.
     """
+    @classmethod
+    def define(cls, spec):
+        super(ModelInputBase, cls).define(spec)
 
-    @classproperty
-    def _use_methods(cls):  # pylint: disable=no-self-argument
-        retdict = super(ModelInputBase, cls)._use_methods
-        retdict.update(  # pylint: disable=no-member
-            dict(
-                tb_model=dict(
-                    valid_types=SinglefileData,
-                    additional_parameter=None,
-                    linkname='tb_model',
-                    docstring="Input model in TBmodels HDF5 format."
-                )
-            )
+        spec.input(
+            'tb_model',
+            valid_type=SinglefileData,
+            help="Input model in TBmodels HDF5 format."
         )
-        return retdict
 
-    def _prepare_for_submission(self, tempfolder, inputdict):
-        try:
-            model_file = inputdict.pop(self.get_linkname('tb_model'))
-        except KeyError:
-            raise InputValidationError(
-                "No tight-binding model 'tb_model' specified for this calculation."
-            )
+    def prepare_for_submission(self, tempfolder):
+        super(ModelInputBase, self).prepare_for_submission(tempfolder)
+
+        model_file = self.inputs.tb_model
 
         calcinfo, codeinfo = super(ModelInputBase,
-                                   self)._prepare_for_submission(
-                                       tempfolder, inputdict
-                                   )
+                                   self).prepare_for_submission(tempfolder)
         calcinfo.local_copy_list = [
-            (model_file.get_file_abs_path(), 'model.hdf5')
+            (model_file.uuid, model_file.filename, 'model.hdf5')
         ]
 
         return calcinfo, codeinfo

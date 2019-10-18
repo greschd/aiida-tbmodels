@@ -13,8 +13,8 @@ import os
 
 from aiida.orm import Code
 from aiida.orm.querybuilder import QueryBuilder
-from aiida.orm.data.folder import FolderData
-from aiida.work.launch import run_get_pid
+from aiida.orm.nodes.data.folder import FolderData
+from aiida.engine.launch import run_get_pk
 
 from aiida_tbmodels.calculations.parse import ParseCalculation
 
@@ -36,7 +36,7 @@ def get_input_folder():
         res = FolderData()
         input_folder = './reference_input'
         for filename in os.listdir(input_folder):
-            res.add_path(
+            res.put_object_from_file(
                 os.path.abspath(os.path.join(input_folder, filename)), filename
             )
         res.description = folder_description
@@ -58,14 +58,14 @@ def run_parse():
     builder.code = Code.get_from_string('tbmodels')
 
     # single-core on local machine
-    builder.options = dict(
+    builder.metadata.options = dict(
         resources=dict(num_machines=1, tot_num_mpiprocs=1),
         withmpi=False,
     )
 
     builder.wannier_folder = get_input_folder()
 
-    result, pid = run_get_pid(builder)
+    result, pid = run_get_pk(builder)
     print('\nRan calculation with PID', pid)
     print('Result:', result)
 

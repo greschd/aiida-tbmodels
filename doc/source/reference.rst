@@ -12,13 +12,17 @@ Reference
 Calculation classes
 -------------------
 
-.. autoclass:: aiida_tbmodels.calculations.eigenvals.EigenvalsCalculation
+.. aiida-calcjob:: EigenvalsCalculation
+    :module: aiida_tbmodels.calculations.eigenvals
 
-.. autoclass:: aiida_tbmodels.calculations.parse.ParseCalculation
+.. aiida-calcjob:: ParseCalculation
+    :module: aiida_tbmodels.calculations.parse
 
-.. autoclass:: aiida_tbmodels.calculations.slice.SliceCalculation
+.. aiida-calcjob:: SliceCalculation
+    :module: aiida_tbmodels.calculations.slice
 
-.. autoclass:: aiida_tbmodels.calculations.symmetrize.SymmetrizeCalculation
+.. aiida-calcjob:: symmetrize.SymmetrizeCalculation
+    :module: aiida_tbmodels.calculations
 
 Parser class
 ------------
