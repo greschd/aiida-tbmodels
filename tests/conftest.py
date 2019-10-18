@@ -23,3 +23,17 @@ def get_tbmodels_process_builder(get_process_builder):  # pylint: disable=redefi
         )
 
     return inner
+
+
+@pytest.fixture
+def check_calc_ok():
+    """
+    Fixture that checks that a calculation finished ok, and prints the scheduler error otherwise.
+    """
+    def inner(calc):
+        if not calc.is_finished_ok:
+            error = calc.get_scheduler_stderr()
+            print(error)
+            raise AssertionError(error)
+
+    return inner

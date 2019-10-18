@@ -38,7 +38,8 @@ def get_tbmodels_parse_builder(sample, get_tbmodels_process_builder):
 def test_parse(
     configure,  # pylint: disable=unused-argument
     assert_finished,
-    get_tbmodels_parse_builder  # pylint: disable=redefined-outer-name
+    get_tbmodels_parse_builder,  # pylint: disable=redefined-outer-name
+    check_calc_ok
 ):
     """
     Test the parse calculation when launched with 'run_get_node'.
@@ -50,6 +51,7 @@ def test_parse(
     output, calc = run_get_node(builder)
 
     assert_finished(calc.pk)
+    check_calc_ok(calc)
     assert isinstance(output['tb_model'], SinglefileData)
     assert calc.get_hash() == calc.get_extra('_aiida_hash')
 
@@ -58,7 +60,8 @@ def test_parse_submit(
     configure_with_daemon,  # pylint: disable=unused-argument
     assert_finished,
     wait_for,
-    get_tbmodels_parse_builder  # pylint: disable=redefined-outer-name
+    get_tbmodels_parse_builder,  # pylint: disable=redefined-outer-name
+    check_calc_ok
 ):
     """
     Test the parse calculation when submitted to the daemon.
@@ -70,6 +73,7 @@ def test_parse_submit(
     calc = submit(builder)
     wait_for(calc.pk)
     assert_finished(calc.pk)
+    check_calc_ok(calc)
 
     assert isinstance(calc.outputs.tb_model, SinglefileData)
     assert calc.get_hash() == calc.get_extra('_aiida_hash')
