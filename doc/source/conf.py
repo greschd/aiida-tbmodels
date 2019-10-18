@@ -45,11 +45,8 @@ import aiida_tbmodels
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    'sphinx.ext.autodoc',
-    'sphinx.ext.mathjax',
-    'sphinx.ext.intersphinx',
-    'sphinx.ext.viewcode',
-    'sphinx.ext.napoleon',
+    'sphinx.ext.autodoc', 'sphinx.ext.mathjax', 'sphinx.ext.intersphinx',
+    'sphinx.ext.viewcode', 'sphinx.ext.napoleon', 'aiida.sphinxext'
 ]
 
 intersphinx_mapping = {
