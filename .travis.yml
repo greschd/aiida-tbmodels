@@ -20,7 +20,7 @@ addons:
       - python3-h5py
       - python3-matplotlib
 before_install:
-  - sudo pip3 install -U setuptools
+  - sudo pip3 install -U pip setuptools
   - sudo pip3 install -U scipy decorator
   - sudo pip3 install bands-inspect
   - sudo pip3 install tbmodels
