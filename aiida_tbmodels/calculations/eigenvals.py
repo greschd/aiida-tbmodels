@@ -47,9 +47,8 @@ class EigenvalsCalculation(ModelInputBase):
         )
 
     def prepare_for_submission(self, tempfolder):
-        write_kpoints(
-            self.inputs.kpoints, tempfolder.open('kpoints.hdf5', 'w+b')
-        )
+        with tempfolder.open('kpoints.hdf5', 'w+b') as kpoints_file:
+            write_kpoints(self.inputs.kpoints, kpoints_file)
 
         calcinfo, codeinfo = super(EigenvalsCalculation,
                                    self).prepare_for_submission(tempfolder)
