@@ -35,7 +35,7 @@ class ParseCalculation(ModelOutputBase):
         spec.input(
             'pos_kind',
             valid_type=Str,
-            default=Str('wannier'),
+            default=lambda: Str('wannier'),
             help='Determines how the orbital positions are parsed.'
         )
 

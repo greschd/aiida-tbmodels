@@ -47,7 +47,7 @@
   "extras_require": {
     "testing": [
       "pytest",
-      "aiida-pytest>=0.1.0a4"
+      "aiida-pytest>=0.1.0a6"
     ],
     "docs": [
       "sphinx",
