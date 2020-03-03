@@ -12,6 +12,18 @@ import os
 import pytest
 
 
+@pytest.fixture(params=[None, 'as_input', 'dense', 'sparse'])
+def sparsity(request):
+    """
+    Fixture to define the 'sparsity' input.
+    """
+    from aiida.orm import Str
+    sparsity_val = request.param
+    if sparsity_val is None:
+        return {}
+    return {'sparsity': Str(sparsity_val)}
+
+
 @pytest.fixture
 def get_tbmodels_parse_builder(sample, get_tbmodels_process_builder):
     """
@@ -37,7 +49,8 @@ def test_parse(
     configure,  # pylint: disable=unused-argument
     assert_finished,
     get_tbmodels_parse_builder,  # pylint: disable=redefined-outer-name
-    check_calc_ok
+    check_calc_ok,
+    sparsity  # pylint: disable=redefined-outer-name
 ):
     """
     Test the parse calculation when launched with 'run_get_node'.
@@ -46,7 +59,7 @@ def test_parse(
     from aiida.engine.launch import run_get_node
 
     builder = get_tbmodels_parse_builder
-    output, calc = run_get_node(builder)
+    output, calc = run_get_node(builder, **sparsity)
 
     assert_finished(calc.pk)
     check_calc_ok(calc)

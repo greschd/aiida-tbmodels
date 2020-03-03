@@ -20,7 +20,7 @@ before_install:
   - sudo pip3 install -U pip setuptools
   - sudo pip3 install -U numpy scipy python-dateutil
   - sudo pip3 install -U bands-inspect
-  - sudo pip3 install -U tbmodels
+  - sudo pip3 install -U git+https://github.com/Z2PackDev/TBmodels.git@dev
   - sudo service postgresql restart
 install:
   - pip install -U 'pip<19' wheel setuptools
