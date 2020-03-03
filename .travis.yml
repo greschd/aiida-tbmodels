@@ -3,7 +3,6 @@ python:
   - "3.6"
   - "3.7"
   - "3.8"
-sudo: true
 services:
   - postgresql
   - rabbitmq
@@ -17,10 +16,10 @@ addons:
       - python3-h5py
       - python3-matplotlib
 before_install:
-  - sudo pip3 install -U pip setuptools
-  - sudo pip3 install -U numpy scipy python-dateutil
-  - sudo pip3 install -U bands-inspect
-  - sudo pip3 install -U tbmodels
+  - pip install -U pip setuptools
+  - pip install -U numpy scipy python-dateutil
+  - pip install -U bands-inspect
+  - pip install -U git+https://github.com/Z2PackDev/TBmodels.git@dev
   - sudo service postgresql restart
 install:
   - pip install -U 'pip<19' wheel setuptools

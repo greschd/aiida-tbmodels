@@ -7,8 +7,6 @@
 Tests for the tbmodels.symmetrize calculation.
 """
 
-from __future__ import division, print_function, unicode_literals
-
 
 def test_symmetrize(
     configure_with_daemon,  # pylint: disable=unused-argument
