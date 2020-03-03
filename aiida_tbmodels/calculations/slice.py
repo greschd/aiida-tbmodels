@@ -15,6 +15,8 @@ class SliceCalculation(ModelInputBase, ModelOutputBase):
     """
     Calculation plugin for the 'tbmodels slice' command, which re-orders or slices orbitals of a tight-binding model.
     """
+    _CMD_NAME = 'slice'
+
     @classmethod
     def define(cls, spec):
         super(SliceCalculation, cls).define(spec)
@@ -24,18 +26,11 @@ class SliceCalculation(ModelInputBase, ModelOutputBase):
             valid_type=List,
             help="Indices of the orbitals which are sliced from the model."
         )
-        spec.exit_code(
-            300,
-            'ERROR_OUTPUT_MODEL_FILE',
-            message='The output model HDF5 file was not found.'
-        )
 
     def prepare_for_submission(self, tempfolder):
         calcinfo, codeinfo = super(SliceCalculation,
                                    self).prepare_for_submission(tempfolder)
 
-        codeinfo.cmdline_params = [
-            'slice', '-o', self.inputs.metadata.options.output_filename
-        ] + [str(x) for x in self.inputs.slice_idx]
+        codeinfo.cmdline_params += [str(x) for x in self.inputs.slice_idx]
 
         return calcinfo

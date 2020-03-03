@@ -8,7 +8,7 @@ Defines the base classes for tbmodels calculations.
 
 import six
 
-from aiida.orm import SinglefileData
+from aiida import orm
 from aiida.engine import CalcJob
 from aiida.common import CalcInfo, CodeInfo
 
@@ -17,6 +17,9 @@ class TbmodelsBase(CalcJob):
     """
     General base class for calculations which run the tbmodels code.
     """
+
+    _CMD_NAME: str
+
     @classmethod
     def define(cls, spec):
         super(TbmodelsBase, cls).define(spec)
@@ -35,8 +38,12 @@ class TbmodelsBase(CalcJob):
         codeinfo = CodeInfo()
         codeinfo.code_uuid = self.inputs.code.uuid
         calcinfo.codes_info = [codeinfo]
+        codeinfo.cmdline_params = self._get_cmdline_params()
 
         return calcinfo, codeinfo
+
+    def _get_cmdline_params(self):
+        return [self._CMD_NAME]
 
 
 class ModelOutputBase(TbmodelsBase):
@@ -55,11 +62,20 @@ class ModelOutputBase(TbmodelsBase):
             valid_type=six.string_types,
             default='tbmodels.model'
         )
+        spec.input(
+            'sparsity', valid_type=orm.Str, default=lambda: orm.Str('sparse')
+        )
 
         spec.output(
             'tb_model',
-            valid_type=SinglefileData,
+            valid_type=orm.SinglefileData,
             help="Output model in TBmodels HDF5 format."
+        )
+
+        spec.exit_code(
+            300,
+            'ERROR_OUTPUT_MODEL_FILE',
+            message='The output model HDF5 file was not found.'
         )
 
     def prepare_for_submission(self, tempfolder):
@@ -67,6 +83,12 @@ class ModelOutputBase(TbmodelsBase):
                                    self).prepare_for_submission(tempfolder)
         calcinfo.retrieve_list = [self.inputs.metadata.options.output_filename]
         return calcinfo, codeinfo
+
+    def _get_cmdline_params(self):
+        return super()._get_cmdline_params() + [
+            '-o', self.inputs.metadata.options.output_filename, '--sparsity',
+            self.inputs.sparsity.value
+        ]
 
 
 class ModelInputBase(TbmodelsBase):
@@ -79,7 +101,7 @@ class ModelInputBase(TbmodelsBase):
 
         spec.input(
             'tb_model',
-            valid_type=SinglefileData,
+            valid_type=orm.SinglefileData,
             help="Input model in TBmodels HDF5 format."
         )
 

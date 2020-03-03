@@ -17,6 +17,8 @@ class ParseCalculation(ModelOutputBase):
     """
     Calculation plugin for the 'tbmodels parse' command, which creates a TBmodels tight-binding model from the Wannier90 output.
     """
+    _CMD_NAME = 'parse'
+
     @classmethod
     def define(cls, spec):
         super(ParseCalculation, cls).define(spec)
@@ -24,8 +26,7 @@ class ParseCalculation(ModelOutputBase):
         spec.input(
             'wannier_folder',
             valid_type=FolderData,
-            help=
-            "Folder containing the Wannier90 output data, with prefix 'wannier90'."
+            help="Folder containing the Wannier90 output data."
         )
         spec.exit_code(
             300,
@@ -61,10 +62,11 @@ class ParseCalculation(ModelOutputBase):
             (wannier_folder.uuid, filename, filename)
             for filename in wannier_folder.list_object_names()
         ]
-        codeinfo.cmdline_params = [
-            'parse', '-p', prefix, '-o',
-            self.inputs.metadata.options.output_filename, '--pos-kind',
-            pos_kind
+        codeinfo.cmdline_params += [
+            '-p',
+            prefix,
+            '--pos-kind',
+            pos_kind,
         ]
 
         return calcinfo

@@ -19,6 +19,7 @@ class EigenvalsCalculation(ModelInputBase):
     Calculation class for the 'tbmodels eigenvals' command, which computes the eigenvalues from a given tight-binding model.
     """
 
+    _CMD_NAME = 'eigenvals'
     _DEFAULT_OUTPUT_FILE = 'eigenvals.hdf5'
 
     @classmethod
@@ -54,5 +55,5 @@ class EigenvalsCalculation(ModelInputBase):
                                    self).prepare_for_submission(tempfolder)
         calcinfo.retrieve_list = [self.inputs.metadata.options.output_filename]
 
-        codeinfo.cmdline_params = ['eigenvals', '-k', 'kpoints.hdf5']
+        codeinfo.cmdline_params += ['-k', 'kpoints.hdf5']
         return calcinfo
