@@ -6,8 +6,6 @@
 Defines the tbmodels.eigenvals calculation.
 """
 
-import six
-
 from aiida.plugins import DataFactory
 from aiida_bands_inspect.io import write_kpoints
 
@@ -19,6 +17,7 @@ class EigenvalsCalculation(ModelInputBase):
     Calculation class for the 'tbmodels eigenvals' command, which computes the eigenvalues from a given tight-binding model.
     """
 
+    _CMD_NAME = 'eigenvals'
     _DEFAULT_OUTPUT_FILE = 'eigenvals.hdf5'
 
     @classmethod
@@ -27,7 +26,7 @@ class EigenvalsCalculation(ModelInputBase):
 
         spec.input(
             'metadata.options.parser_name',
-            valid_type=six.string_types,
+            valid_type=str,
             default='bands_inspect.bands'
         )
         spec.input(
@@ -47,13 +46,12 @@ class EigenvalsCalculation(ModelInputBase):
         )
 
     def prepare_for_submission(self, tempfolder):
-        write_kpoints(
-            self.inputs.kpoints, tempfolder.open('kpoints.hdf5', 'w+b')
-        )
+        with tempfolder.open('kpoints.hdf5', 'w+b') as kpoints_file:
+            write_kpoints(self.inputs.kpoints, kpoints_file)
 
         calcinfo, codeinfo = super(EigenvalsCalculation,
                                    self).prepare_for_submission(tempfolder)
         calcinfo.retrieve_list = [self.inputs.metadata.options.output_filename]
 
-        codeinfo.cmdline_params = ['eigenvals', '-k', 'kpoints.hdf5']
+        codeinfo.cmdline_params += ['-k', 'kpoints.hdf5']
         return calcinfo

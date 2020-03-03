@@ -22,10 +22,10 @@ class ModelParser(Parser):
             raise err
 
         try:
-            model_node = DataFactory('singlefile')(
-                file=out_folder.
-                open(self.node.get_option('output_filename'), 'rb')
-            )
+            with out_folder.open(
+                self.node.get_option('output_filename'), 'rb'
+            ) as output_file:
+                model_node = DataFactory('singlefile')(file=output_file)
         except IOError:
             return self.exit_codes.ERROR_OUTPUT_MODEL_FILE
 

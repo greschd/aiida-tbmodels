@@ -7,8 +7,6 @@
 Runs a 'tbmodels symmetrize' calculation.
 """
 
-from __future__ import division, print_function, unicode_literals
-
 import os
 
 from aiida.orm import Code

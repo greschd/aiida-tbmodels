@@ -1,6 +1,6 @@
 {
   "name": "aiida-tbmodels",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "AiiDA Plugin for running TBmodels",
   "author": "Dominik Gresch",
   "author_email": "greschd@gmx.ch",
@@ -11,9 +11,10 @@
     "Environment :: Plugins",
     "Intended Audience :: Science/Research",
     "License :: OSI Approved :: Apache Software License",
-    "Programming Language :: Python :: 2.7",
+    "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.6",
     "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
     "Topic :: Scientific/Engineering :: Physics",
     "Framework :: AiiDA"
   ],
@@ -39,22 +40,22 @@
   ],
   "reentry_register": true,
   "install_requires": [
-    "six",
-    "future",
-    "aiida-core>=1.0.0<2.0.0",
+    "aiida-core>=1.1.0<2.0.0",
     "aiida-bands-inspect>=0.2.0b1"
   ],
+  "python_requires": ">=3.6",
   "extras_require": {
     "testing": [
       "pytest",
-      "aiida-pytest>=0.1.0a4"
+      "aiida-pytest>=0.1.0a6"
     ],
     "docs": [
       "sphinx",
-      "sphinx-rtd-theme"
+      "sphinx-rtd-theme",
+      "sphinxcontrib-details-directive"
     ],
     "dev_precommit": [
-      "yapf==0.28",
+      "yapf==0.29",
       "pre-commit",
       "prospector==1.1.7"
     ]

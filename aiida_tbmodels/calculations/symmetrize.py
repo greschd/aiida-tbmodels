@@ -15,6 +15,8 @@ class SymmetrizeCalculation(ModelInputBase, ModelOutputBase):
     """
     Calculation class for the 'tbmodels symmetrize' command, which creates a symmetrized tight-binding model from a tight-binding model and symmetry representations.
     """
+    _CMD_NAME = 'symmetrize'
+
     @classmethod
     def define(cls, spec):
         super(SymmetrizeCalculation, cls).define(spec)

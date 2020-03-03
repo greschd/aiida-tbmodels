@@ -7,8 +7,6 @@
 Defines tests for the tbmodels.slice calculation.
 """
 
-from __future__ import division, unicode_literals
-
 
 def test_slice(
     configure_with_daemon,  # pylint: disable=unused-argument

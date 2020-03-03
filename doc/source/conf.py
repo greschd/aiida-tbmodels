@@ -4,37 +4,27 @@
 # Author: Dominik Gresch <greschd@gmx.ch>
 
 import os
-import sys
 import time
+import contextlib
 
-sys.path.append(os.path.join(os.path.dirname(__file__), os.pardir))
+from aiida.manage.configuration import load_documentation_profile
 
-os.environ['DJANGO_SETTINGS_MODULE'] = 'rtd_settings'
+load_documentation_profile()
 
-import aiida
-from aiida.manage.configuration import settings
-
-# We set that we are in documentation mode - even for local compilation
-settings.IN_DOC_MODE = True
-
-# on_rtd is whether we are on readthedocs.org, this line of code grabbed
-# from docs.readthedocs.org
-# NOTE: it is needed to have these lines before load_dbenv()
-on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
-
-if not on_rtd:  # only import and set the theme if we're building docs locally
-    html_theme = 'sphinx_rtd_theme'
-    # Loading the dbenv. The backend should be fixed before compiling the
-    # documentation.
-    aiida.load_profile()
-else:
-    # Back-end settings for readthedocs online documentation.
-    # from aiida.manage.configuration import settings
-    settings.IN_RT_DOC_MODE = True
-    settings.BACKEND = "django"
-    settings.AIIDADB_PROFILE = "default"
+# make sure all entry-points are detected, since readthedocs doesn't expose a way to do this
+# during post-install.
+import reentry
+reentry.manager.scan()
 
 import aiida_tbmodels
+
+# This checks whether the build is on READTHEDOCS. We only import
+# and set the theme if we're building docs locally.
+if not os.environ.get('READTHEDOCS', None) == 'True':
+    with contextlib.suppress(ImportError):
+        import sphinx_rtd_theme
+        html_theme = 'sphinx_rtd_theme'
+        html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 
 # -- General configuration ------------------------------------------------
 
