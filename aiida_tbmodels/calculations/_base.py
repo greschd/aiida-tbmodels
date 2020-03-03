@@ -6,8 +6,6 @@
 Defines the base classes for tbmodels calculations.
 """
 
-import six
-
 from aiida import orm
 from aiida.engine import CalcJob
 from aiida.common import CalcInfo, CodeInfo
@@ -26,7 +24,7 @@ class TbmodelsBase(CalcJob):
 
         spec.input(
             'metadata.options.output_filename',
-            valid_type=six.string_types,
+            valid_type=str,
             default=cls._DEFAULT_OUTPUT_FILE
         )
 
@@ -59,11 +57,16 @@ class ModelOutputBase(TbmodelsBase):
 
         spec.input(
             'metadata.options.parser_name',
-            valid_type=six.string_types,
+            valid_type=str,
             default='tbmodels.model'
         )
         spec.input(
-            'sparsity', valid_type=orm.Str, default=lambda: orm.Str('sparse')
+            'sparsity',
+            valid_type=orm.Str,
+            required=False,
+            help=
+            'Set the sparsity of the output model. Requires TBmodels version >=1.4.',
+            validator=cls._sparsity_validator
         )
 
         spec.output(
@@ -78,6 +81,18 @@ class ModelOutputBase(TbmodelsBase):
             message='The output model HDF5 file was not found.'
         )
 
+    @staticmethod
+    def _sparsity_validator(value, port):  # pylint: disable=unused-argument
+        """
+        Helper function to validate the 'sparsity' input.
+        """
+        if value:
+            sparsity_value = value.value
+            allowed_values = ['as_input', 'sparse', 'dense']
+            if sparsity_value not in allowed_values:
+                return f"Invalid sparsity value '{sparsity_value}', must be one of {allowed_values}"
+        return None
+
     def prepare_for_submission(self, tempfolder):
         calcinfo, codeinfo = super(ModelOutputBase,
                                    self).prepare_for_submission(tempfolder)
@@ -85,10 +100,12 @@ class ModelOutputBase(TbmodelsBase):
         return calcinfo, codeinfo
 
     def _get_cmdline_params(self):
-        return super()._get_cmdline_params() + [
-            '-o', self.inputs.metadata.options.output_filename, '--sparsity',
-            self.inputs.sparsity.value
+        cmdline_params = super()._get_cmdline_params() + [
+            '-o', self.inputs.metadata.options.output_filename
         ]
+        if 'sparsity' in self.inputs:
+            cmdline_params.extend(['--sparsity', self.inputs.sparsity.value])
+        return cmdline_params
 
 
 class ModelInputBase(TbmodelsBase):
