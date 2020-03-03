@@ -51,10 +51,11 @@
     ],
     "docs": [
       "sphinx",
-      "sphinx-rtd-theme"
+      "sphinx-rtd-theme",
+      "sphinxcontrib-details-directive"
     ],
     "dev_precommit": [
-      "yapf==0.28",
+      "yapf==0.29",
       "pre-commit",
       "prospector==1.1.7"
     ]
