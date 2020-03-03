@@ -6,8 +6,6 @@
 Defines the tbmodels.eigenvals calculation.
 """
 
-import six
-
 from aiida.plugins import DataFactory
 from aiida_bands_inspect.io import write_kpoints
 
@@ -28,7 +26,7 @@ class EigenvalsCalculation(ModelInputBase):
 
         spec.input(
             'metadata.options.parser_name',
-            valid_type=six.string_types,
+            valid_type=str,
             default='bands_inspect.bands'
         )
         spec.input(

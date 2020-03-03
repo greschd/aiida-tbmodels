@@ -6,8 +6,6 @@
 Defines the base classes for tbmodels calculations.
 """
 
-import six
-
 from aiida import orm
 from aiida.engine import CalcJob
 from aiida.common import CalcInfo, CodeInfo
@@ -26,7 +24,7 @@ class TbmodelsBase(CalcJob):
 
         spec.input(
             'metadata.options.output_filename',
-            valid_type=six.string_types,
+            valid_type=str,
             default=cls._DEFAULT_OUTPUT_FILE
         )
 
@@ -59,7 +57,7 @@ class ModelOutputBase(TbmodelsBase):
 
         spec.input(
             'metadata.options.parser_name',
-            valid_type=six.string_types,
+            valid_type=str,
             default='tbmodels.model'
         )
         spec.input(

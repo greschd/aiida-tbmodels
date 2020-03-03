@@ -7,8 +7,6 @@
 Test setup for aiida-tbmodels tests.
 """
 
-from __future__ import print_function
-
 import pytest
 
 from aiida_pytest import *  # pylint: disable=unused-wildcard-import,redefined-builtin

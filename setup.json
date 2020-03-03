@@ -40,8 +40,6 @@
   ],
   "reentry_register": true,
   "install_requires": [
-    "six",
-    "future",
     "aiida-core>=1.0.0<2.0.0",
     "aiida-bands-inspect>=0.2.0b1"
   ],

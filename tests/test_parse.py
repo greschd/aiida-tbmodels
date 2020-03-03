@@ -7,8 +7,6 @@
 Tests for the tbmodels.parse calculation.
 """
 
-from __future__ import division, print_function, unicode_literals
-
 import os
 
 import pytest
