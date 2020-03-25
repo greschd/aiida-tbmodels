@@ -1,13 +1,13 @@
 {
   "name": "aiida-tbmodels",
-  "version": "0.3.0",
+  "version": "0.4.0.dev0",
   "description": "AiiDA Plugin for running TBmodels",
   "author": "Dominik Gresch",
   "author_email": "greschd@gmx.ch",
   "license": "Apache 2.0",
   "url": "https://aiida-tbmodels.readthedocs.io",
   "classifiers": [
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 5 - Production/Stable",
     "Environment :: Plugins",
     "Intended Audience :: Science/Research",
     "License :: OSI Approved :: Apache Software License",
@@ -41,7 +41,8 @@
   "reentry_register": true,
   "install_requires": [
     "aiida-core>=1.1.0<2.0.0",
-    "aiida-bands-inspect>=0.2.0b1"
+    "aiida-bands-inspect>=0.2.0b1",
+    "tbmodels>=1.4.0rc2<2"
   ],
   "python_requires": ">=3.6",
   "extras_require": {

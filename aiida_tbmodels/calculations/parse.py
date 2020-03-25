@@ -6,6 +6,8 @@
 Defines the tbmodels.parse calculation.
 """
 
+from tbmodels.exceptions import ParseExceptionMarker
+
 from aiida.orm import Str
 from aiida.orm.nodes.data.folder import FolderData
 from aiida.common import InputValidationError
@@ -32,6 +34,16 @@ class ParseCalculation(ModelOutputBase):
             300,
             'ERROR_OUTPUT_MODEL_FILE',
             message='The output model HDF5 file was not found.'
+        )
+        spec.exit_code(
+            301,
+            ParseExceptionMarker.INCOMPLETE_WSVEC_FILE.name,
+            message=ParseExceptionMarker.INCOMPLETE_WSVEC_FILE.value
+        )
+        spec.exit_code(
+            401,
+            ParseExceptionMarker.AMBIGUOUS_NEAREST_ATOM_POSITIONS.name,
+            message=ParseExceptionMarker.AMBIGUOUS_NEAREST_ATOM_POSITIONS.value
         )
         spec.input(
             'pos_kind',

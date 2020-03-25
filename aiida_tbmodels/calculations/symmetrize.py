@@ -6,6 +6,8 @@
 Defines the tbmodels.symmetrize calculation.
 """
 
+from tbmodels.exceptions import SymmetrizeExceptionMarker
+
 from aiida.orm import SinglefileData
 
 from ._base import ModelInputBase, ModelOutputBase
@@ -30,6 +32,11 @@ class SymmetrizeCalculation(ModelInputBase, ModelOutputBase):
             300,
             'ERROR_OUTPUT_MODEL_FILE',
             message='The output model HDF5 file was not found.'
+        )
+        spec.exit_code(
+            301,
+            SymmetrizeExceptionMarker.INVALID_SYMMETRY_TYPE.name,
+            message=SymmetrizeExceptionMarker.INVALID_SYMMETRY_TYPE.value
         )
 
     def prepare_for_submission(self, tempfolder):

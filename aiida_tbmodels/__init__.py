@@ -6,4 +6,4 @@
 An AiiDA plugin for running calculations with the TBmodels tight-binding code.
 """
 
-__version__ = "0.3.0"
+__version__ = "0.4.0.dev0"
