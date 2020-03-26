@@ -6,11 +6,15 @@
 Defines the tbmodels.parse calculation.
 """
 
+from tbmodels.exceptions import ParseExceptionMarker
+
 from aiida.orm import Str
 from aiida.orm.nodes.data.folder import FolderData
 from aiida.common import InputValidationError
 
 from ._base import ModelOutputBase
+
+__all__ = ('ParseCalculation', )
 
 
 class ParseCalculation(ModelOutputBase):
@@ -30,8 +34,18 @@ class ParseCalculation(ModelOutputBase):
         )
         spec.exit_code(
             300,
-            'ERROR_OUTPUT_MODEL_FILE',
+            'ERROR_RESULT_FILE',
             message='The output model HDF5 file was not found.'
+        )
+        spec.exit_code(
+            301,
+            ParseExceptionMarker.INCOMPLETE_WSVEC_FILE.name,
+            message=ParseExceptionMarker.INCOMPLETE_WSVEC_FILE.value
+        )
+        spec.exit_code(
+            401,
+            ParseExceptionMarker.AMBIGUOUS_NEAREST_ATOM_POSITIONS.name,
+            message=ParseExceptionMarker.AMBIGUOUS_NEAREST_ATOM_POSITIONS.value
         )
         spec.input(
             'pos_kind',
@@ -54,8 +68,7 @@ class ParseCalculation(ModelOutputBase):
                 "'wannier_folder' does not contain a *_hr.dat file."
             )
 
-        calcinfo, codeinfo = super(ParseCalculation,
-                                   self).prepare_for_submission(tempfolder)
+        calcinfo, codeinfo = super().prepare_for_submission(tempfolder)
 
         # add Wannier90 output files to local_copy_list
         calcinfo.local_copy_list = [

@@ -10,6 +10,10 @@ from aiida import orm
 from aiida.engine import CalcJob
 from aiida.common import CalcInfo, CodeInfo
 
+__all__ = (
+    'TbmodelsBase', 'ResultFileMixin', 'ModelOutputBase', 'ModelInputBase'
+)
+
 
 class TbmodelsBase(CalcJob):
     """
@@ -20,12 +24,23 @@ class TbmodelsBase(CalcJob):
 
     @classmethod
     def define(cls, spec):
-        super(TbmodelsBase, cls).define(spec)
+        super().define(spec)
 
         spec.input(
             'metadata.options.output_filename',
             valid_type=str,
-            default=cls._DEFAULT_OUTPUT_FILE
+            default='aiida.out'
+        )
+        spec.input(
+            'metadata.options.error_filename',
+            valid_type=str,
+            default='aiida.err'
+        )
+        spec.exit_code(
+            301,
+            'UNKNOWN_ERROR',
+            message=
+            'The standard error file contains an unknown TBmodels exception.'
         )
 
     def prepare_for_submission(self, tempfolder):  # pylint: disable=unused-argument,arguments-differ
@@ -37,6 +52,13 @@ class TbmodelsBase(CalcJob):
         codeinfo.code_uuid = self.inputs.code.uuid
         calcinfo.codes_info = [codeinfo]
         codeinfo.cmdline_params = self._get_cmdline_params()
+        codeinfo.stdout_name = self.metadata.options.output_filename
+        codeinfo.stderr_name = self.metadata.options.error_filename
+
+        calcinfo.retrieve_list = [
+            self.metadata.options.output_filename,
+            self.metadata.options.error_filename,
+        ]
 
         return calcinfo, codeinfo
 
@@ -44,16 +66,42 @@ class TbmodelsBase(CalcJob):
         return [self._CMD_NAME]
 
 
-class ModelOutputBase(TbmodelsBase):
+class ResultFileMixin:
+    """Mixin class to add the 'result_filename' option, and add the
+    result file to the list of files to retrieve.
+    """
+    _RESULT_FILENAME: str
+
+    @classmethod
+    def define(cls, spec):
+        super().define(spec)
+        spec.input(
+            'metadata.options.result_filename',
+            valid_type=str,
+            default=cls._RESULT_FILENAME
+        )
+
+    def prepare_for_submission(self, tempfolder):
+        calcinfo, codeinfo = super().prepare_for_submission(tempfolder)
+        calcinfo.retrieve_list += [self.metadata.options.result_filename]
+        return calcinfo, codeinfo
+
+    def _get_cmdline_params(self):
+        return super()._get_cmdline_params() + [
+            '-o', self.metadata.options.result_filename
+        ]
+
+
+class ModelOutputBase(ResultFileMixin, TbmodelsBase):
     """
     Base class for calculations which have a model (in HDF5 form) as output.
     """
 
-    _DEFAULT_OUTPUT_FILE = 'model_out.hdf5'
+    _RESULT_FILENAME = 'model_out.hdf5'
 
     @classmethod
     def define(cls, spec):
-        super(ModelOutputBase, cls).define(spec)
+        super().define(spec)
 
         spec.input(
             'metadata.options.parser_name',
@@ -77,7 +125,7 @@ class ModelOutputBase(TbmodelsBase):
 
         spec.exit_code(
             300,
-            'ERROR_OUTPUT_MODEL_FILE',
+            'ERROR_RESULT_FILE',
             message='The output model HDF5 file was not found.'
         )
 
@@ -93,16 +141,8 @@ class ModelOutputBase(TbmodelsBase):
                 return f"Invalid sparsity value '{sparsity_value}', must be one of {allowed_values}"
         return None
 
-    def prepare_for_submission(self, tempfolder):
-        calcinfo, codeinfo = super(ModelOutputBase,
-                                   self).prepare_for_submission(tempfolder)
-        calcinfo.retrieve_list = [self.inputs.metadata.options.output_filename]
-        return calcinfo, codeinfo
-
     def _get_cmdline_params(self):
-        cmdline_params = super()._get_cmdline_params() + [
-            '-o', self.inputs.metadata.options.output_filename
-        ]
+        cmdline_params = super()._get_cmdline_params()
         if 'sparsity' in self.inputs:
             cmdline_params.extend(['--sparsity', self.inputs.sparsity.value])
         return cmdline_params
@@ -114,7 +154,7 @@ class ModelInputBase(TbmodelsBase):
     """
     @classmethod
     def define(cls, spec):
-        super(ModelInputBase, cls).define(spec)
+        super().define(spec)
 
         spec.input(
             'tb_model',
@@ -123,12 +163,11 @@ class ModelInputBase(TbmodelsBase):
         )
 
     def prepare_for_submission(self, tempfolder):
-        super(ModelInputBase, self).prepare_for_submission(tempfolder)
+        super().prepare_for_submission(tempfolder)
 
         model_file = self.inputs.tb_model
 
-        calcinfo, codeinfo = super(ModelInputBase,
-                                   self).prepare_for_submission(tempfolder)
+        calcinfo, codeinfo = super().prepare_for_submission(tempfolder)
         calcinfo.local_copy_list = [
             (model_file.uuid, model_file.filename, 'model.hdf5')
         ]
