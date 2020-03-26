@@ -7,6 +7,9 @@
 Tests for the tbmodels.eigenvals calculation.
 """
 
+from aiida.engine import run
+from aiida.plugins import DataFactory
+
 
 def test_eigenvals(
     configure_with_daemon,  # pylint: disable=unused-argument
@@ -16,9 +19,6 @@ def test_eigenvals(
     """
     Test that the eigenvals calculation creates a bands output.
     """
-    from aiida.plugins import DataFactory
-    from aiida.engine import run
-
     builder = get_tbmodels_process_builder('tbmodels.eigenvals')
 
     builder.tb_model = DataFactory('singlefile')(file=sample('model.hdf5'))

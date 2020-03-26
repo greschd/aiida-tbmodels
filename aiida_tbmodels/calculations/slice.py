@@ -10,6 +10,8 @@ from aiida.orm import List
 
 from ._base import ModelInputBase, ModelOutputBase
 
+__all__ = ('SliceCalculation', )
+
 
 class SliceCalculation(ModelInputBase, ModelOutputBase):
     """
@@ -28,8 +30,7 @@ class SliceCalculation(ModelInputBase, ModelOutputBase):
         )
 
     def prepare_for_submission(self, tempfolder):
-        calcinfo, codeinfo = super(SliceCalculation,
-                                   self).prepare_for_submission(tempfolder)
+        calcinfo, codeinfo = super().prepare_for_submission(tempfolder)
 
         codeinfo.cmdline_params += [str(x) for x in self.inputs.slice_idx]
 

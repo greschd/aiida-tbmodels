@@ -7,22 +7,24 @@ Defines the tbmodels.eigenvals calculation.
 """
 
 from aiida.plugins import DataFactory
-from aiida_bands_inspect.io import write_kpoints
+from aiida_bands_inspect.io import write
 
-from ._base import ModelInputBase
+from ._base import ModelInputBase, ResultFileMixin
+
+__all__ = ('EigenvalsCalculation', )
 
 
-class EigenvalsCalculation(ModelInputBase):
+class EigenvalsCalculation(ResultFileMixin, ModelInputBase):
     """
     Calculation class for the 'tbmodels eigenvals' command, which computes the eigenvalues from a given tight-binding model.
     """
 
     _CMD_NAME = 'eigenvals'
-    _DEFAULT_OUTPUT_FILE = 'eigenvals.hdf5'
+    _RESULT_FILENAME = 'eigenvals.hdf5'
 
     @classmethod
     def define(cls, spec):
-        super(EigenvalsCalculation, cls).define(spec)
+        super().define(spec)
 
         spec.input(
             'metadata.options.parser_name',
@@ -34,11 +36,11 @@ class EigenvalsCalculation(ModelInputBase):
             valid_type=DataFactory('array.kpoints'),
             help="Kpoints for which the eigenvalues are calculated."
         )
-        # spec.exit_code(
-        #     300,
-        #     'ERROR_OUTPUT_FILE',
-        #     message='The output HDF5 file was not found.'
-        # )
+        spec.exit_code(
+            300,
+            'ERROR_RESULT_FILE',
+            message='The result HDF5 file was not found.'
+        )
         spec.output(
             'bands',
             valid_type=DataFactory('array.bands'),
@@ -47,11 +49,10 @@ class EigenvalsCalculation(ModelInputBase):
 
     def prepare_for_submission(self, tempfolder):
         with tempfolder.open('kpoints.hdf5', 'w+b') as kpoints_file:
-            write_kpoints(self.inputs.kpoints, kpoints_file)
+            write(self.inputs.kpoints, kpoints_file)
 
-        calcinfo, codeinfo = super(EigenvalsCalculation,
-                                   self).prepare_for_submission(tempfolder)
-        calcinfo.retrieve_list = [self.inputs.metadata.options.output_filename]
-
-        codeinfo.cmdline_params += ['-k', 'kpoints.hdf5']
+        calcinfo, _ = super().prepare_for_submission(tempfolder)
         return calcinfo
+
+    def _get_cmdline_params(self):
+        return super()._get_cmdline_params() + ['-k', 'kpoints.hdf5']

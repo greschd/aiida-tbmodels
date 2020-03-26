@@ -14,6 +14,8 @@ from aiida.common import InputValidationError
 
 from ._base import ModelOutputBase
 
+__all__ = ('ParseCalculation', )
+
 
 class ParseCalculation(ModelOutputBase):
     """
@@ -32,7 +34,7 @@ class ParseCalculation(ModelOutputBase):
         )
         spec.exit_code(
             300,
-            'ERROR_OUTPUT_MODEL_FILE',
+            'ERROR_RESULT_FILE',
             message='The output model HDF5 file was not found.'
         )
         spec.exit_code(
@@ -66,8 +68,7 @@ class ParseCalculation(ModelOutputBase):
                 "'wannier_folder' does not contain a *_hr.dat file."
             )
 
-        calcinfo, codeinfo = super(ParseCalculation,
-                                   self).prepare_for_submission(tempfolder)
+        calcinfo, codeinfo = super().prepare_for_submission(tempfolder)
 
         # add Wannier90 output files to local_copy_list
         calcinfo.local_copy_list = [
