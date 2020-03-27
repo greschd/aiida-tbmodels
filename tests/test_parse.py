@@ -7,8 +7,6 @@
 Tests for the tbmodels.parse calculation.
 """
 
-import os
-
 import pytest
 
 from aiida import orm
@@ -27,21 +25,16 @@ def sparsity(request):
 
 
 @pytest.fixture
-def get_tbmodels_parse_builder(sample, get_tbmodels_process_builder):
+def get_tbmodels_parse_builder(
+    get_tbmodels_process_builder, get_folderdata_from_directory
+):
     """
     Fixture which creates a builder for the tbmodels.parse
     calculation.
     """
     def _get_tbmodels_parse_builder(dirname='bi_wannier_output'):
         builder = get_tbmodels_process_builder('tbmodels.parse')
-
-        input_path = sample(dirname)
-        input_folder = orm.FolderData()
-        for filename in os.listdir(input_path):
-            input_folder.put_object_from_file(
-                os.path.join(input_path, filename), filename
-            )
-        builder.wannier_folder = input_folder
+        builder.wannier_folder = get_folderdata_from_directory(dirname=dirname)
 
         return builder
 

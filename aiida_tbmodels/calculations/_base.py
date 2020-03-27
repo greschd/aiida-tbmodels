@@ -36,6 +36,9 @@ class TbmodelsBase(CalcJob):
             valid_type=str,
             default='aiida.err'
         )
+        spec.inputs['metadata']['options']['resources'].default = lambda: {
+            'num_machines': 1
+        }
         spec.exit_code(
             301,
             'UNKNOWN_ERROR',
