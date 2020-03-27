@@ -60,8 +60,9 @@
     ],
     "dev_precommit": [
       "yapf==0.29",
-      "pre-commit",
-      "prospector==1.1.7"
+      "pre-commit==2.2.0",
+      "prospector==1.2.0",
+      "pylint==2.4.4"
     ]
   }
 }
