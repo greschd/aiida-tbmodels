@@ -9,15 +9,19 @@ Tests for the tbmodels.parse workchain.
 
 # pylint: disable=no-member
 
+import pytest
+
 from aiida import orm
 from aiida.engine import run_get_node
 
 from aiida_tbmodels.workflows.parse import ParseWorkChain
 
 
+@pytest.mark.parametrize('pos_kind', [None, 'wannier', 'nearest_atom'])
 def test_parse(
     configure,  # pylint: disable=unused-argument
     assert_finished,
+    pos_kind,
     get_folderdata_from_directory,
 ):
     """
@@ -28,7 +32,8 @@ def test_parse(
     builder.parse.wannier_folder = get_folderdata_from_directory(
         dirname='silicon'
     )
-    builder.parse.pos_kind = orm.Str('nearest_atom')
+    if pos_kind is not None:
+        builder.parse.pos_kind = orm.Str(pos_kind)
     builder.parse.code = orm.Code.get(label='tbmodels')
     output, node = run_get_node(builder)
 
