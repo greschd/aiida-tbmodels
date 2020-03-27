@@ -51,10 +51,6 @@ def get_folderdata_from_directory(sample):  # pylint: disable=redefined-outer-na
         input_path = sample(dirname)
         input_folder = orm.FolderData()
         input_folder.put_object_from_tree(input_path)
-        # for filename in os.listdir(input_path):
-        #     input_folder.put_object_from_file(
-        #         os.path.join(input_path, filename), filename
-        #     )
         return input_folder
 
     return _get_folderdata_from_directory
