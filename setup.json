@@ -32,6 +32,9 @@
     ],
     "aiida.parsers": [
       "tbmodels.model = aiida_tbmodels.parsers.model:ModelParser"
+    ],
+    "aiida.workflows": [
+      "tbmodels.parse = aiida_tbmodels.workflows.parse:ParseWorkChain"
     ]
   },
   "include_package_data": true,
