@@ -29,12 +29,12 @@ def test_parse(
     """
     builder = ParseWorkChain.get_builder()
 
-    builder.parse.wannier_folder = get_folderdata_from_directory(
+    builder.calc.wannier_folder = get_folderdata_from_directory(
         dirname='silicon'
     )
     if pos_kind is not None:
-        builder.parse.pos_kind = orm.Str(pos_kind)
-    builder.parse.code = orm.Code.get(label='tbmodels')
+        builder.calc.pos_kind = orm.Str(pos_kind)
+    builder.calc.code = orm.Code.get(label='tbmodels')
     output, node = run_get_node(builder)
 
     assert_finished(node.pk)

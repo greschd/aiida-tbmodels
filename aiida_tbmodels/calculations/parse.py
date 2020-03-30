@@ -8,7 +8,7 @@ Defines the tbmodels.parse calculation.
 
 from tbmodels.exceptions import ParseExceptionMarker
 
-from aiida.orm import Str
+from aiida import orm
 from aiida.orm.nodes.data.folder import FolderData
 from aiida.common import InputValidationError
 
@@ -19,7 +19,8 @@ __all__ = ('ParseCalculation', )
 
 class ParseCalculation(ModelOutputBase):
     """
-    Calculation plugin for the 'tbmodels parse' command, which creates a TBmodels tight-binding model from the Wannier90 output.
+    Calculation plugin for the 'tbmodels parse' command, which creates a
+    TBmodels tight-binding model from the Wannier90 output.
     """
     _CMD_NAME = 'parse'
 
@@ -49,10 +50,28 @@ class ParseCalculation(ModelOutputBase):
         )
         spec.input(
             'pos_kind',
-            valid_type=Str,
-            default=lambda: Str('wannier'),
+            valid_type=orm.Str,
+            default=lambda: orm.Str('wannier'),
             help='Determines how the orbital positions are parsed.'
         )
+        spec.input(
+            'distance_ratio_threshold',
+            valid_type=orm.Float,
+            required=False,
+            help="Determines the minimum ratio between nearest and "
+            "next-nearest atom when parsing with 'nearest_atom' mode."
+        )
+        spec.inputs.validator = cls._validate_inputs
+
+    @staticmethod
+    def _validate_inputs(inputs, ctx=None):  # pylint: disable=unused-argument
+        """Validate the inputs of the entire input namespace."""
+
+        if 'distance_ratio_threshold' in inputs:
+            if inputs['pos_kind'].value != 'nearest_atom':
+                return "Can only set 'distance_ratio_threshold' when 'pos_kind' is 'nearest_atom'."
+            if inputs['distance_ratio_threshold'] < 1:
+                return "The 'distance_ratio_threshold' value must be at least one."
 
     def prepare_for_submission(self, tempfolder):
         wannier_folder = self.inputs.wannier_folder
@@ -81,5 +100,10 @@ class ParseCalculation(ModelOutputBase):
             '--pos-kind',
             pos_kind,
         ]
+        if 'distance_ratio_threshold' in self.inputs:
+            codeinfo.cmdline_params += [
+                '--distance-ratio-threshold',
+                str(self.inputs.distance_ratio_threshold.value)
+            ]
 
         return calcinfo
