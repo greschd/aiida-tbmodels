@@ -25,7 +25,7 @@ class ParseWorkChain(BaseRestartWorkChain):
     def define(cls, spec):
         super().define(spec)
 
-        spec.expose_inputs(ParseCalculation, namespace='parse')
+        spec.expose_inputs(ParseCalculation, namespace='calc')
         spec.expose_outputs(ParseCalculation)
 
         spec.outline(
@@ -39,7 +39,7 @@ class ParseWorkChain(BaseRestartWorkChain):
     def setup(self):
         super().setup()
         self.ctx.inputs = AttributeDict(
-            self.exposed_inputs(ParseCalculation, 'parse')
+            self.exposed_inputs(ParseCalculation, 'calc')
         )
 
     @process_handler(
