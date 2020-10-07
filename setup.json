@@ -1,6 +1,6 @@
 {
   "name": "aiida-tbmodels",
-  "version": "0.4.0rc1",
+  "version": "0.4.0rc2",
   "description": "AiiDA Plugin for running TBmodels",
   "author": "Dominik Gresch",
   "author_email": "greschd@gmx.ch",
