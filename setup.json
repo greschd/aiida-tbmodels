@@ -25,6 +25,7 @@
   ],
   "entry_points": {
     "aiida.calculations": [
+      "tbmodels.calcfunctions.eigenvals = aiida_tbmodels.calcfunctions:eigenvals",
       "tbmodels.eigenvals = aiida_tbmodels.calculations.eigenvals:EigenvalsCalculation",
       "tbmodels.parse = aiida_tbmodels.calculations.parse:ParseCalculation",
       "tbmodels.slice = aiida_tbmodels.calculations.slice:SliceCalculation",
@@ -45,7 +46,8 @@
   "install_requires": [
     "aiida-core>=1.1.0<2.0.0",
     "aiida-bands-inspect>=0.4.0",
-    "tbmodels~=1.4"
+    "tbmodels~=1.4",
+    "bands-inspect~=0.3"
   ],
   "python_requires": ">=3.6",
   "extras_require": {

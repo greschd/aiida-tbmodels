@@ -8,7 +8,7 @@ Tests for the tbmodels.eigenvals calculation.
 """
 
 from aiida.engine import run
-from aiida.plugins import DataFactory
+from aiida.plugins import DataFactory, CalculationFactory
 
 
 def test_eigenvals(
@@ -29,3 +29,23 @@ def test_eigenvals(
 
     output = run(builder)
     assert isinstance(output['bands'], DataFactory('array.bands'))
+
+
+def test_eigenvals_calcfunction(
+    configure,  # pylint: disable=unused-argument
+    sample,
+):
+    """
+    Test that the eigenvals calcfunction creates a bands output.
+    """
+    eigenvals_calcfunction = CalculationFactory(
+        'tbmodels.calcfunctions.eigenvals'
+    )
+    tb_model = DataFactory('singlefile')(file=sample('model.hdf5'))
+
+    k_mesh = DataFactory('array.kpoints')()
+    k_mesh.set_kpoints_mesh([4, 4, 4], offset=[0, 0, 0])
+
+    res = eigenvals_calcfunction(tb_model=tb_model, kpoints=k_mesh)
+    assert isinstance(res, DataFactory('array.bands'))
+    assert res.get_array('bands').shape == (64, 14)
