@@ -47,11 +47,11 @@ class EigenvalsCalculation(ResultFileMixin, ModelInputBase):
             help="The calculated eigenvalues of the model at given k-points."
         )
 
-    def prepare_for_submission(self, tempfolder):
-        with tempfolder.open('kpoints.hdf5', 'w+b') as kpoints_file:
+    def prepare_for_submission(self, folder):
+        with folder.open('kpoints.hdf5', 'w+b') as kpoints_file:
             write(self.inputs.kpoints, kpoints_file)
 
-        calcinfo, _ = super().prepare_for_submission(tempfolder)
+        calcinfo, _ = super().prepare_for_submission(folder)
         return calcinfo
 
     def _get_cmdline_params(self):
