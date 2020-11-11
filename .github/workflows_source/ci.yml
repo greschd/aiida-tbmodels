@@ -90,4 +90,3 @@ jobs:
       - name: Upload coverage data
         if: ${{ matrix.install-type == 'testing' }} # Coverage data is present only when installed with -e
         run: codecov --file tests/coverage.xml
-        working-directory: tests
