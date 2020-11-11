@@ -2,3 +2,4 @@ config.yml
 .aiida~
 htmlcov
 .coverage
+coverage.xml
