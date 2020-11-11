@@ -45,12 +45,13 @@
   "install_requires": [
     "aiida-core>=1.1.0<2.0.0",
     "aiida-bands-inspect>=0.4.0",
-    "tbmodels>=1.4.0rc2<2"
+    "tbmodels~=1.4"
   ],
   "python_requires": ">=3.6",
   "extras_require": {
     "testing": [
       "pytest",
+      "pytest-cov",
       "aiida-pytest>=0.1.0a6"
     ],
     "docs": [
@@ -58,11 +59,12 @@
       "sphinx-rtd-theme",
       "sphinxcontrib-details-directive"
     ],
-    "dev_precommit": [
+    "dev": [
       "yapf==0.29",
       "pre-commit==2.2.0",
       "prospector==1.2.0",
-      "pylint==2.4.4"
+      "pylint==2.4.4",
+      "mypy==0.790"
     ]
   }
 }

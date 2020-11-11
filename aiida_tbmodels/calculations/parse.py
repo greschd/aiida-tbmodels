@@ -73,7 +73,7 @@ class ParseCalculation(ModelOutputBase):
             if inputs['distance_ratio_threshold'] < 1:
                 return "The 'distance_ratio_threshold' value must be at least one."
 
-    def prepare_for_submission(self, tempfolder):
+    def prepare_for_submission(self, folder):
         wannier_folder = self.inputs.wannier_folder
         pos_kind = self.inputs.pos_kind.value
 
@@ -87,7 +87,7 @@ class ParseCalculation(ModelOutputBase):
                 "'wannier_folder' does not contain a *_hr.dat file."
             )
 
-        calcinfo, codeinfo = super().prepare_for_submission(tempfolder)
+        calcinfo, codeinfo = super().prepare_for_submission(folder)
 
         # add Wannier90 output files to local_copy_list
         calcinfo.local_copy_list = [

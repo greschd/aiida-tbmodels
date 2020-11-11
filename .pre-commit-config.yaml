@@ -1,25 +1,44 @@
 repos:
-- repo: git://github.com/pre-commit/mirrors-yapf
-  rev: v0.29.0
-  hooks:
-  - id: yapf
-    language: system
-- repo: local
-  hooks:
-  - id: prospector
-    name: prospector
-    entry: prospector
-    types: [file, python]
-    language: system
-    exclude: '^(doc/)|(examples/)|(futures/)'
-  - id: version-number
-    name: Check version numbers
-    entry: python ./utils/validate_version_consistency.py
-    language: system
-    files: >-
-      (?x)^(
-        setup.json|
-        utils/validate_version_consistency.py|
-        aiida_tbmodels/__init__.py
-      )$
-    pass_filenames: false
+  - repo: git://github.com/pre-commit/mirrors-yapf
+    rev: v0.29.0
+    hooks:
+      - id: yapf
+        language: system
+  - repo: local
+    hooks:
+      - id: pylint
+        name: pylint
+        entry: pylint
+        language: system
+        types: [python]
+        exclude: "^(doc/)|(examples/)|(playground/)|(utils/)"
+      - id: mypy
+        name: mypy
+        entry: mypy
+        language: python
+        types: [python]
+        #args: [--scripts-are-modules]
+        require_serial: true
+        exclude: "^(doc/)|(examples/)|(playground/)|(utils/)"
+        args: []
+      - id: version-number
+        name: Check version numbers
+        entry: python ./utils/validate_version_consistency.py
+        language: system
+        files: >-
+          (?x)^(
+            setup.json|
+            utils/validate_version_consistency.py|
+            aiida_tbmodels/__init__.py
+          )$
+        pass_filenames: false
+      - id: interpolate-workflows
+        name: Interpolate Github workflows
+        entry: python ./utils/interpolate_yaml_anchors.py
+        language: system
+        files: |
+          (?x)^(
+            .github/(.)*|
+            utils/interpolate_yaml_anchors.py
+          )$
+        pass_filenames: false

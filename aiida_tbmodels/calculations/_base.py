@@ -69,7 +69,7 @@ class TbmodelsBase(CalcJob):
         return [self._CMD_NAME]
 
 
-class ResultFileMixin:
+class ResultFileMixin(CalcJob):
     """Mixin class to add the 'result_filename' option, and add the
     result file to the list of files to retrieve.
     """
@@ -84,8 +84,8 @@ class ResultFileMixin:
             default=cls._RESULT_FILENAME
         )
 
-    def prepare_for_submission(self, tempfolder):
-        calcinfo, codeinfo = super().prepare_for_submission(tempfolder)
+    def prepare_for_submission(self, folder):
+        calcinfo, codeinfo = super().prepare_for_submission(folder)
         calcinfo.retrieve_list += [self.metadata.options.result_filename]
         return calcinfo, codeinfo
 
