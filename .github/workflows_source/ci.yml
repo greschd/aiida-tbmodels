@@ -85,9 +85,8 @@ jobs:
       - name: Set up test configuration
         run: python .ci/configure.py .ci/test_config.yml tests/config.yml
       - name: Run pytest
-        run: pytest --cov=aiida_tbmodels --cov-config=../.coveragerc --quiet-wipe --print-status
+        run: pytest --cov=aiida_tbmodels --cov-report=xml --cov-config=.coveragerc --quiet-wipe --print-status
         working-directory: tests
       - name: Upload coverage data
         if: ${{ matrix.install-type == 'testing' }} # Coverage data is present only when installed with -e
-        run: codecov
-        working-directory: tests
+        run: codecov --file tests/coverage.xml
